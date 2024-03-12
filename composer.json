@@ -1,0 +1,32 @@
+{
+    "name": "web-of-trust/webkey-directory",
+    "description": "Webkey Directory project",
+    "type": "project",
+    "homepage": "https://github.com/web-of-trust/webkey-directory",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "Nguyen Van Nguyen",
+            "email": "nguyennv1981@gmail.com",
+            "homepage": "https://github.com/nguyennv"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Wkd\\": "src/"
+        }
+    },
+    "require": {
+        "league/flysystem": "^3.25",
+        "php-di/slim-bridge": "^3.4",
+        "psr-discovery/http-client-implementations": "^1.1",
+        "psr-discovery/http-factory-implementations": "^1.1",
+        "psr-discovery/log-implementations": "^1.0",
+        "slim/csrf": "^1.4",
+        "slim/php-view": "^3.2",
+        "slim/psr7": "^1.6",
+        "symfony/console": "^7.0",
+        "vlucas/phpdotenv": "^5.6",
+        "guzzlehttp/guzzle": "^7.8"
+    }
+}
