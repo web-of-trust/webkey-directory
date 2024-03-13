@@ -48,7 +48,7 @@ final class RouteDefinitions
         );
 
         $app->get('/.well-known/openpgpkey/{domain}/policy', function ($request, $response, array $args) {
-            return $response->withStatus(200)
+            return $response->withStatus(200);
         });
 
         $app->group('/vks/v1', static function (RouteCollectorProxy $group) {
