@@ -51,11 +51,15 @@ class HkpController extends BaseController
             }
             $len = strlen(@hex2bin($search) ?: '');
             if ($len === 20) {
-                $storage = $this->getContainer()->get('vks.fingerprint.storage');
+                $storage = $this->getContainer()->get(
+                    'vks.fingerprint.storage'
+                );
                 $location = strtoupper($search);
             }
             elseif ($len === 8) {
-                $storage = $this->getContainer()->get('vks.keyid.storage');
+                $storage = $this->getContainer()->get(
+                    'vks.keyid.storage'
+                );
                 $location = strtoupper($search);
             }
         }

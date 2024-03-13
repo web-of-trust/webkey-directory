@@ -29,7 +29,9 @@ abstract class BaseController
      *
      * @param ContainerInterface $container
      */
-    public function __construct(private readonly ContainerInterface $container)
+    public function __construct(
+        private readonly ContainerInterface $container
+    )
     {
     }
 

@@ -62,9 +62,13 @@ class SearchController extends BaseController
         $keyFound = false;
         $storage = $location = $keyUrl = '';
         if (filter_var($search, FILTER_VALIDATE_EMAIL)) {
-            $storage = $this->getContainer()->get('vks.email.storage');
+            $storage = $this->getContainer()->get(
+                'vks.email.storage'
+            );
             $location = $search;
-            $keyUrl = $routeParser->urlFor('by-email', ['email' => $location]);
+            $keyUrl = $routeParser->urlFor(
+                'by-email', ['email' => $location]
+            );
         }
         else {
             if (str_starts_with($search, '0x')) {
@@ -72,14 +76,22 @@ class SearchController extends BaseController
             }
             $len = strlen(@hex2bin($search) ?: '');
             if ($len === 20) {
-                $storage = $this->getContainer()->get('vks.fingerprint.storage');
+                $storage = $this->getContainer()->get(
+                    'vks.fingerprint.storage'
+                );
                 $location = strtoupper($search);
-                $keyUrl = $routeParser->urlFor('by-fingerprint', ['fingerprint' => $location]);
+                $keyUrl = $routeParser->urlFor(
+                    'by-fingerprint', ['fingerprint' => $location]
+                );
             }
             elseif ($len === 8) {
-                $storage = $this->getContainer()->get('vks.keyid.storage');
+                $storage = $this->getContainer()->get(
+                    'vks.keyid.storage'
+                );
                 $location = strtoupper($search);
-                $keyUrl = $routeParser->urlFor('by-routeName', ['keyid' => $location]);
+                $keyUrl = $routeParser->urlFor(
+                    'by-routeName', ['keyid' => $location]
+                );
             }
         }
         if (!empty($storage) && !empty($location)) {

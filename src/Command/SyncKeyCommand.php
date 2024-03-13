@@ -40,7 +40,7 @@ class SyncKeyCommand extends Command
     const REQUEST_METHOD  = 'GET';
     const WKS_URL_OPTION  = 'wks-url';
 
-    private ?string $webkeyServiceUrl;
+    private ?string $wksUrl;
 
     /**
      * Sync key command constructor.
@@ -57,9 +57,11 @@ class SyncKeyCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(
+        InputInterface $input, OutputInterface $output
+    ): int
     {
-        if (!empty($this->webkeyServiceUrl)) {
+        if (!empty($this->wksUrl)) {
             $this->syncKey();
         }
         else {
@@ -75,21 +77,28 @@ class SyncKeyCommand extends Command
     protected function configure(): void
     {
         $this->addOption(
-            self::WKS_URL_OPTION, null, InputOption::VALUE_REQUIRED, 'The webkey service url.'
+            self::WKS_URL_OPTION,
+            null,
+            InputOption::VALUE_REQUIRED,
+            'The webkey service url.'
         );
-        $this->setHelp('This command allows you to sync OpenPGP public keys from webkey service.');
+        $this->setHelp(
+            'This command allows you to sync OpenPGP public keys from webkey service.'
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(
+        InputInterface $input, OutputInterface $output
+    )
     {
-        $this->webkeyServiceUrl = $input->getOption(self::WKS_URL_OPTION);
+        $this->wksUrl = $input->getOption(self::WKS_URL_OPTION);
 
         $helper = $this->getHelper('question');
-        if (empty($this->webkeyServiceUrl)) {
-            $this->webkeyServiceUrl = $helper->ask(
+        if (empty($this->wksUrl)) {
+            $this->wksUrl = $helper->ask(
                 $input,
                 $output,
                 new Question('Please enter the webkey service url: '),
@@ -104,7 +113,9 @@ class SyncKeyCommand extends Command
      * @param OutputInterface $output
      * @return int
      */
-    protected function missingParameter(InputInterface $input, OutputInterface $output): int
+    protected function missingParameter(
+        InputInterface $input, OutputInterface $output
+    ): int
     {
         $style = new SymfonyStyle($input, $output);
         $style->error(sprintf(
@@ -199,9 +210,12 @@ class SyncKeyCommand extends Command
         $httpClient = Discover::httpClient();
         $requestFactory = Discover::httpRequestFactory();
         $httpRequest = $requestFactory
-            ->createRequest(self::REQUEST_METHOD, $this->webkeyServiceUrl)
+            ->createRequest(self::REQUEST_METHOD, $this->wksUrl)
             ->withHeader('Content-Type', self::CONTENT_TYPE)
-            ->withHeader('User-Agent', $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT);
+            ->withHeader(
+                'User-Agent',
+                $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT
+            );
         return $httpClient->sendRequest($httpRequest);
     }
 

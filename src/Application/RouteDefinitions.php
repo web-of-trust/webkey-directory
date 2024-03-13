@@ -52,11 +52,12 @@ final class RouteDefinitions
             Controller\WkdController::class
         );
 
-        $app->get('/.well-known/openpgpkey/{domain}/policy', function ($request, $response, array $args) {
-            return $response->withStatus(200);
-        });
+        $app->get(
+            '/.well-known/openpgpkey/{domain}/policy',
+            fn ($request, $response, array $args) => $response->withStatus(200)
+        );
 
-        $app->group('/vks/v1', static function (RouteCollectorProxy $group) {
+        $app->group('/vks/v1', function (RouteCollectorProxy $group) {
             $group->get(
                 '/by-fingerprint/{fingerprint}', Controller\VksController::class
             )->setName('by-fingerprint');
