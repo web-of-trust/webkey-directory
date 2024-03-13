@@ -57,6 +57,36 @@ The returned key is ASCII Armored, and has a content-type of `application/pgp-ke
 * Web server with URL rewriting
 * PHP 8.1 or newer
 
+### Install Composer
+Don’t have Composer? It’s easy to install by following the instructions on their [download](https://getcomposer.org/download) page.
+
+### Install dependencies
+```sh
+composer install --optimize-autoloader --no-dev --prefer-dist
+```
+
+### Install a PSR-7 Implementation and ServerRequest Creator
+Slim PSR-7
+```sh
+composer require slim/psr7
+```
+
+Nyholm PSR-7 and Nyholm PSR-7 Server
+```sh
+composer require nyholm/psr7 nyholm/psr7-server
+```
+
+Guzzle PSR-7
+```sh
+composer require guzzlehttp/psr7
+```
+
+Laminas Diactoros
+```sh
+composer require laminas/laminas-diactoros
+```
+
+
 ## Licensing
 [GNU Affero General Public License v3.0](LICENSE)
 
