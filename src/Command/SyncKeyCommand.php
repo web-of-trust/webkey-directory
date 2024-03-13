@@ -45,6 +45,7 @@ class SyncKeyCommand extends Command
         private readonly ContainerInterface $container
     )
     {
+        parent::__construct();
     }
 
     /**

@@ -97,7 +97,7 @@ abstract class AbstractRunner implements RunnerInterface
             DIRECTORY_SEPARATOR,
             'storage',
         ]);
-        $vksStorage = mplode([
+        $vksStorage = implode([
             $storagePath,
             DIRECTORY_SEPARATOR,
             'vks',
