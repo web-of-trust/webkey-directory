@@ -45,6 +45,11 @@ Retrieves the key with the given `Email Address`. Only exact matches are accepte
 Lookup by email address requires opt-in by the owner of the email address.
 The returned key is ASCII Armored, and has a content-type of `application/pgp-keys`.
 
+## Installation
+### System Requirements
+* Web server with URL rewriting
+* PHP 8.1 or newer
+
 ## Licensing
 [GNU Affero General Public License v3.0](LICENSE)
 
