@@ -11,12 +11,10 @@ namespace Wkd\Controller;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
-use Slim\Views\PhpRenderer;
 
 /**
  * Vks controller class
@@ -29,19 +27,6 @@ use Slim\Views\PhpRenderer;
 class VksController extends BaseController
 {
     /**
-     * Vks controller constructor.
-     *
-     * @param PhpRenderer $renderer
-     * @param ContainerInterface $container
-     */
-    public function __construct(
-        private readonly PhpRenderer $renderer, ContainerInterface $container
-    )
-    {
-        parent::__construct($container);
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function action(
@@ -53,11 +38,11 @@ class VksController extends BaseController
         $storage = $location = '';
         if (!empty($args['fingerprint'])) {
             $storage = $this->getContainer()->get('vks.fingerprint.storage');
-            $location = $args['fingerprint'];
+            $location = strtoupper($args['fingerprint']);
         }
         elseif (!empty($args['keyid'])) {
             $storage = $this->getContainer()->get('vks.keyid.storage');
-            $location = $args['keyid'];
+            $location = strtoupper($args['keyid']);
         }
         elseif (!empty($args['email'])) {
             $storage = $this->getContainer()->get('vks.email.storage');

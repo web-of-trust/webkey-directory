@@ -9,6 +9,8 @@
 
 namespace Wkd\Controller;
 
+use League\Flysystem\Filesystem;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -34,6 +36,62 @@ class HkpController extends BaseController
         array $args
     ): ResponseInterface
     {
+        $params = $request->getQueryParams();
+        $op = $params['op'] ?? 'get';
+        $search = $params['search'] ?? '';
+
+        $storage = $location = '';
+        if (filter_var($search, FILTER_VALIDATE_EMAIL)) {
+            $storage = $this->getContainer()->get('vks.email.storage');
+            $location = $search;
+        }
+        else {
+            if (str_starts_with($search, '0x')) {
+                $search = str_replace('0x', '', $search);
+            }
+            $len = strlen(@hex2bin($search) ?: '');
+            if ($len === 20) {
+                $storage = $this->getContainer()->get('vks.fingerprint.storage');
+                $location = strtoupper($search);
+            }
+            elseif ($len === 8) {
+                $storage = $this->getContainer()->get('vks.keyid.storage');
+                $location = strtoupper($search);
+            }
+        }
+
+        if (!empty($storage) && !empty($location)) {
+            $filesystem = new Filesystem(
+                new LocalFilesystemAdapter($storage)
+            );
+            if ($filesystem->fileExists($location)) {
+                if ($op === 'get') {
+                    $response->getBody()->write(
+                        $filesystem->read($location)
+                    );
+                    return $response->withHeader(
+                        'Content-Type', 'application/pgp-keys'
+                    )->withHeader(
+                        'Content-Disposition', "attachment; filename=$location"
+                    )->withHeader(
+                        'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0'
+                    )->withHeader(
+                        'Pragma', 'no-cache'
+                    );
+                }
+                else {
+                    $response->getBody()->write(
+                        $op . ' operation not implemented'
+                    );
+
+                    return $response;
+                }
+            }
+        }
+
+        $response->getBody()->write(
+            'No key found for ' . $search
+        );
         return $response;
     }
 }

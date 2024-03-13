@@ -11,12 +11,10 @@ namespace Wkd\Controller;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
-use Slim\Views\PhpRenderer;
 
 /**
  * Wkd controller class
@@ -29,19 +27,6 @@ use Slim\Views\PhpRenderer;
  */
 class WkdController extends BaseController
 {
-    /**
-     * Wkd controller constructor.
-     *
-     * @param PhpRenderer $renderer
-     * @param ContainerInterface $container
-     */
-    public function __construct(
-        private readonly PhpRenderer $renderer, ContainerInterface $container
-    )
-    {
-        parent::__construct($container);
-    }
-
     /**
      * {@inheritdoc}
      */
