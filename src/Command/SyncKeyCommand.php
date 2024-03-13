@@ -9,6 +9,9 @@
 
 namespace Wkd\Command;
 
+use League\Flysystem\Filesystem;
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use PsrDiscovery\Discover;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -17,7 +20,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Wkd\Sync\SyncKey;
 
 /**
  * Sync key command class
@@ -32,9 +34,14 @@ use Wkd\Sync\SyncKey;
 )]
 class SyncKeyCommand extends Command
 {
-    private const WEBKEY_PRIVACY_URL_OPTION  = 'webkey-service-url';
+    const EMAIL_PATTERN   = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
+    const CONTENT_TYPE    = 'application/json; charset=utf-8';
+    const HTTP_USER_AGENT = 'Webkey-Directory-Client';
+    const REQUEST_METHOD  = 'GET';
 
-    private ?string $webkeyPrivacyUrl;
+    const WEBKEY_SERVICE_URL_OPTION  = 'webkey-service-url';
+
+    private ?string $webkeyServiceUrl;
 
     /**
      * Sync key command constructor.
@@ -53,11 +60,8 @@ class SyncKeyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!empty($this->webkeyPrivacyUrl)) {
-            $sync = new SyncKey(
-                $this->webkeyPrivacyUrl, $this->container
-            );
-            $sync->sync();
+        if (!empty($this->webkeyServiceUrl)) {
+            $this->syncKey();
         }
         else {
             return $this->missingParameter($input, $output);
@@ -72,7 +76,7 @@ class SyncKeyCommand extends Command
     protected function configure(): void
     {
         $this->addOption(
-            self::WEBKEY_PRIVACY_URL_OPTION, null, InputOption::VALUE_REQUIRED, 'The webkey service url.'
+            self::WEBKEY_SERVICE_URL_OPTION, null, InputOption::VALUE_REQUIRED, 'The webkey service url.'
         );
         $this->setHelp('This command allows you to sync OpenPGP public keys from webkey service.');
     }
@@ -82,11 +86,11 @@ class SyncKeyCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $this->webkeyPrivacyUrl = $input->getOption(self::WEBKEY_PRIVACY_URL_OPTION);
+        $this->webkeyServiceUrl = $input->getOption(self::WEBKEY_SERVICE_URL_OPTION);
 
         $helper = $this->getHelper('question');
-        if (empty($this->webkeyPrivacyUrl)) {
-            $this->webkeyPrivacyUrl = $helper->ask(
+        if (empty($this->webkeyServiceUrl)) {
+            $this->webkeyServiceUrl = $helper->ask(
                 $input,
                 $output,
                 new Question('Please enter the webkey service url: '),
@@ -106,8 +110,107 @@ class SyncKeyCommand extends Command
         $style = new SymfonyStyle($input, $output);
         $style->error(sprintf(
             '%s parameter is missing!',
-            self::WEBKEY_PRIVACY_URL_OPTION,
+            self::WEBKEY_SERVICE_URL_OPTION,
         ));
         return 1;
+    }
+
+    private function syncKey(): void
+    {
+        $response = $this->sendRequest()->getBody()->getContents();
+        if ($certs = json_decode($response)) {
+            $vksEmails = [];
+            $wkdDomains = [];
+
+            $fpFs = new Filesystem(
+                new LocalFilesystemAdapter(
+                    $this->container->get('vks.fingerprint.storage')
+                )
+            );
+            $keyFs = new Filesystem(
+                new LocalFilesystemAdapter(
+                    $this->container->get('vks.keyid.storage')
+                )
+            );
+            foreach ($certs as $cert) {
+                if (empty($wkdDomains[$cert->domain][$cert->wkd_hash])) {
+                    $wkdDomains[$cert->domain][$cert->wkd_hash] = $cert->key_data;
+                }
+                else {
+                    $wkdDomains[$cert->domain][$cert->wkd_hash] .= $cert->key_data;
+                }
+
+                if ($email = self::extractEmail($cert->primary_user)) {
+                    if (empty($vksEmails[$email])) {
+                        $vksEmails[$email] = $cert->key_data;
+                    }
+                    else {
+                        $vksEmails[$email] .= $cert->key_data;
+                    }
+                }
+
+                $fpFs->write(
+                    strtoupper($cert->fingerprint),
+                    $cert->key_data
+                );
+                $keyFs->write(
+                    strtoupper($cert->key_id),
+                    $cert->key_data
+                );
+            }
+
+            if (!empty($vksEmails)) {
+                $vksFs = new Filesystem(
+                    new LocalFilesystemAdapter(
+                        $this->container->get('vks.email.storage')
+                    )
+                );
+                foreach ($vksEmails as $email => $keyData) {
+                    $vksFs->write(
+                        $email,
+                        $keyData
+                    );
+                }
+            }
+
+            if (!empty($wkdDomains)) {
+                $wkdFs = new Filesystem(
+                    new LocalFilesystemAdapter(
+                        $this->container->get('wkd.storage')
+                    )
+                );
+                foreach ($wkdDomains as $domain => $wkdHashs) {
+                    foreach ($wkdHashs as $hash => $keyData) {
+                        $wkdFs->write(
+                            implode([
+                                $domain,
+                                DIRECTORY_SEPARATOR,
+                                $hash,
+                            ]),
+                            $keyData
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    private function sendRequest()
+    {
+        $httpClient = Discover::httpClient();
+        $requestFactory = Discover::httpRequestFactory();
+        $httpRequest = $requestFactory
+            ->createRequest(self::REQUEST_METHOD, $this->webkeyServiceUrl)
+            ->withHeader('Content-Type', self::CONTENT_TYPE)
+            ->withHeader('User-Agent', $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT);
+        return $httpClient->sendRequest($httpRequest);
+    }
+
+    private static function extractEmail(string $userId): string
+    {
+        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
+            return $matches[0];
+        };
+        return '';
     }
 }
