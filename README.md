@@ -17,8 +17,8 @@ Webkey Directory implements a subset of the HTTP Keyserver protocol so that Open
 
 Returns an ASCII Armored key matching the query. Query may be:
 * An exact email address query of the form `localpart@example.org`.
-* A hexadecimal representation of a long KeyID (e.g., `069C0C348DD82C19`, optionally prefixed by 0x).
-* A hexadecimal representation of a Fingerprint (e.g., `8E8C33FA4626337976D97978069C0C348DD82C19`,
+* A hexadecimal representation of a long KeyID (e.g., `5A28D96A75CB054F`, optionally prefixed by 0x).
+* A hexadecimal representation of a Fingerprint (e.g., `6FFAD46F1A77B1C37D3B4AFC5E088B143FDA2105`,
   optionally prefixed by 0x).
 
 ### Verifying Keyserver (VKS) Interface
