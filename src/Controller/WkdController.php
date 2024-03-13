@@ -36,7 +36,7 @@ class WkdController extends BaseController
         array $args
     ): ResponseInterface
     {
-        $domain = $args['domain'] ?? '';
+        $domain = $args['domain'] ?? $request->getHeaderLine('Host');
         $hash = $args['hash'] ?? '';
         if (!empty($domain) && !empty($hash)) {
             $filesystem = new Filesystem(

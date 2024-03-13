@@ -47,6 +47,11 @@ final class RouteDefinitions
             Controller\WkdController::class
         );
 
+        $app->get(
+            '/.well-known/openpgpkey/hu/{hash}',
+            Controller\WkdController::class
+        );
+
         $app->get('/.well-known/openpgpkey/{domain}/policy', function ($request, $response, array $args) {
             return $response->withStatus(200);
         });
