@@ -3,17 +3,16 @@ Webkey Directory
 Webkey Directory is a public service for discovery of OpenPGP-compatible keys
 
 ## Features
-- Publish OpenPGP keys as a Web Key Directory
+- Support parts of [Web Key Directory](https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service) (WKD)
+- Support parts of [HTTP Keyserver Protocol](https://datatracker.ietf.org/doc/html/draft-gallagher-openpgp-hkp) (HKP)
+- Support parts of Verifying Keyserver (VKS)
 
-## Web Key Directory (WKD) Interface
-The Web Key Directory [WKD](https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service)
-is a standard for discovery of OpenPGP keys by email address, via the domain of its email provider.
-It is used to discover unknown keys in some email clients.
+### Web Key Directory (WKD) Interface
+The Web Key Directory is a standard for discovery of OpenPGP keys by email address,
+via the domain of its email provider. It is used to discover unknown keys in some email clients.
 
-## HTTP Keyserver Protocol (HKP) Interface
-Webkey Directory implements a subset of the
-[HKP](https://datatracker.ietf.org/doc/html/draft-gallagher-openpgp-hkp)
-protocol so that OpenPGP tools can discover keys
+### HTTP Keyserver Protocol (HKP) Interface
+Webkey Directory implements a subset of the HTTP Keyserver protocol so that OpenPGP tools can discover keys
 * `GET /pks/lookup?op=get&search=<QUERY>`
 
 Returns an ASCII Armored key matching the query. Query may be:
@@ -22,7 +21,7 @@ Returns an ASCII Armored key matching the query. Query may be:
 * A hexadecimal representation of a Fingerprint (e.g., `8E8C33FA4626337976D97978069C0C348DD82C19`,
   optionally prefixed by 0x).
 
-## Verifying Keyserver (VKS) Interface
+### Verifying Keyserver (VKS) Interface
 Webkey Directory implements a subset of the VKS.
 Keys can be discovered by `Fingerprint`, `KeyID`, `Email Address`
 
