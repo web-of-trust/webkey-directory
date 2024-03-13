@@ -9,6 +9,7 @@
 
 namespace Wkd\Controller;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -30,9 +31,14 @@ class HomeController extends BaseController
      * Search controller constructor.
      *
      * @param PhpRenderer $renderer
+     * @param ContainerInterface $container
      */
-    public function __construct(private readonly PhpRenderer $renderer)
+    public function __construct(
+        private readonly PhpRenderer $renderer,
+        ContainerInterface $container
+    )
     {
+        parent::__construct($container);
     }
 
     /**

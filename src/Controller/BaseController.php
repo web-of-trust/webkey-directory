@@ -61,6 +61,32 @@ abstract class BaseController
     }
 
     /**
+     * Perform download content on controller
+     * 
+     * @param ResponseInterface $response
+     * @param string $filename
+     * @param string $content
+     * @return ResponseInterface
+     */
+    protected function download(
+        ResponseInterface $response,
+        string $filename,
+        string $content
+    ): ResponseInterface
+    {
+        $response->getBody()->write($content);
+        return $response->withHeader(
+            'Content-Type', 'application/pgp-keys'
+        )->withHeader(
+            'Content-Disposition', "attachment; filename=$filename"
+        )->withHeader(
+            'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0'
+        )->withHeader(
+            'Pragma', 'no-cache'
+        );
+    }
+
+    /**
      * Perform action on controller
      * 
      * @param ServerRequestInterface $request

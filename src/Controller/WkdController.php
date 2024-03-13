@@ -50,17 +50,8 @@ class WkdController extends BaseController
                 $hash,
             ]);
             if ($filesystem->fileExists($location)) {
-                $response->getBody()->write(
-                    $filesystem->read($location)
-                );
-                return $response->withHeader(
-                    'Content-Type', 'application/pgp-keys'
-                )->withHeader(
-                    'Content-Disposition', "attachment; filename=$hash"
-                )->withHeader(
-                    'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0'
-                )->withHeader(
-                    'Pragma', 'no-cache'
+                return $this->download(
+                    $response, $hash, $filesystem->read($location)
                 );
             }
         }

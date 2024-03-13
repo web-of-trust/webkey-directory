@@ -66,17 +66,8 @@ class HkpController extends BaseController
             );
             if ($filesystem->fileExists($location)) {
                 if ($op === 'get') {
-                    $response->getBody()->write(
-                        $filesystem->read($location)
-                    );
-                    return $response->withHeader(
-                        'Content-Type', 'application/pgp-keys'
-                    )->withHeader(
-                        'Content-Disposition', "attachment; filename=$location"
-                    )->withHeader(
-                        'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0'
-                    )->withHeader(
-                        'Pragma', 'no-cache'
+                    return $this->download(
+                        $response, $location, $filesystem->read($location)
                     );
                 }
                 else {
