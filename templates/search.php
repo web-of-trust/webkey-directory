@@ -9,7 +9,7 @@
     <div class="card">
         <h1><a class="brand" href="<?php echo $homeUrl; ?>"><?php echo $title; ?></a></h1>
         <?php if ($keyFound): ?>
-            <p>A key was found for <span class="email"><?php echo $search; ?></span></p>
+            <p>An entry was found for <span class="email"><?php echo $search; ?></span></p>
             <p>
                 <a href="<?php echo $keyUrl; ?>"><?php echo $search; ?></a>
             </p>
