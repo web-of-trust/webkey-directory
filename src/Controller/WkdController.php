@@ -19,7 +19,7 @@ use Psr\Http\Message\{
 /**
  * Wkd controller class
  * Web Key Directory (WKD) Interface
- * https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service/
+ * https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service
  * 
  * @package  Wkd
  * @category Controller
