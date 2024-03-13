@@ -10,8 +10,10 @@
 namespace Wkd\Application;
 
 use DI\Bridge\Slim\Bridge;
+use PsrDiscovery\Discover;
 use Psr\Log\LoggerInterface;
 use Slim\App;
+use Slim\Factory\AppFactory;
 
 /**
  * Slim runner class
@@ -28,6 +30,9 @@ final class SlimRunner extends AbstractRunner
      */
     public function run(): void
     {
+        AppFactory::setResponseFactory(Discover::httpResponseFactory());
+        AppFactory::setStreamFactory(Discover::httpStreamFactory());
+
         $app = Bridge::create($this->getContainer());
         self::registerMiddlewares($app);
         self::registerRoutes($app);
