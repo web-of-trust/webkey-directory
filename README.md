@@ -10,6 +10,7 @@ Webkey Directory is a public service for discovery of OpenPGP-compatible keys
 ### Web Key Directory (WKD) Interface
 The Web Key Directory is a standard for discovery of OpenPGP keys by email address,
 via the domain of its email provider. It is used to discover unknown keys in some email clients.
+* `GET /.well-known/openpgpkey/<DOMAIN>/hu/<BASE32-LOCAL-PART-HASH>`
 
 ### HTTP Keyserver Protocol (HKP) Interface
 Webkey Directory implements a subset of the HTTP Keyserver protocol so that OpenPGP tools can discover keys
@@ -39,7 +40,7 @@ The KeyID may refer to the primary key, or any subkey.
 Hexadecimal digits MUST be uppercase, and MUST NOT be prefixed with 0x.
 The returned key is ASCII Armored, and has a content-type of `application/pgp-keys`.
 
-* `GET /vks/v1/by-email/<URI-ENCODED EMAIL-ADDRESS>`
+* `GET /vks/v1/by-email/<URI-ENCODED-EMAIL-ADDRESS>`
 
 Retrieves the key with the given `Email Address`. Only exact matches are accepted.
 Lookup by email address requires opt-in by the owner of the email address.
