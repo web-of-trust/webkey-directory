@@ -14,6 +14,7 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
+use Slim\App;
 use Slim\Views\PhpRenderer;
 
 /**
@@ -50,6 +51,12 @@ class HomeController extends BaseController
         array $args
     ): ResponseInterface
     {
-        return $response;
+        $app = $this->getContainer()->get(App::class);
+        $routeParser = $app->getRouteCollector()->getRouteParser();
+        return $this->render($response, 'index.php', [
+            'title' => $this->getContainer()->get('app.name'),
+            'homeUrl' => $routeParser->urlFor('home'),
+            'searchUrl' => $routeParser->urlFor('search'),
+        ]);
     }
 }

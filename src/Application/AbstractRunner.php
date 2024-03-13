@@ -21,7 +21,7 @@ use Psr\Container\ContainerInterface;
  */
 abstract class AbstractRunner implements RunnerInterface
 {
-    const APP_NAME    = 'webkey-directory';
+    const APP_NAME    = 'Webkey Directory';
     const APP_VERSION = '1.0.0';
 
     /**

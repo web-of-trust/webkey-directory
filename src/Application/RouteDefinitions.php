@@ -36,11 +36,11 @@ final class RouteDefinitions
 
         $app->get(
             '/', Controller\HomeController::class
-        );
+        )->setName('home');
 
         $app->get(
             '/search', Controller\SearchController::class
-        );
+        )->setName('search');
 
         $app->get(
             '/.well-known/openpgpkey/{domain}/hu/{hash}',
@@ -59,13 +59,13 @@ final class RouteDefinitions
         $app->group('/vks/v1', static function (RouteCollectorProxy $group) {
             $group->get(
                 '/by-fingerprint/{fingerprint}', Controller\VksController::class
-            );
+            )->setName('by-fingerprint');
             $group->get(
                 '/by-keyid/{keyid}', Controller\VksController::class
-            );
+            )->setName('by-keyid');
             $group->get(
                 '/by-email/{email}', Controller\VksController::class
-            );
+            )->setName('by-email');
         });
 
         $app->get(
