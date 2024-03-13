@@ -38,8 +38,7 @@ class SyncKeyCommand extends Command
     const CONTENT_TYPE    = 'application/json; charset=utf-8';
     const HTTP_USER_AGENT = 'Webkey-Directory-Client';
     const REQUEST_METHOD  = 'GET';
-
-    const WEBKEY_SERVICE_URL_OPTION  = 'webkey-service-url';
+    const WKS_URL_OPTION  = 'wks-url';
 
     private ?string $webkeyServiceUrl;
 
@@ -76,7 +75,7 @@ class SyncKeyCommand extends Command
     protected function configure(): void
     {
         $this->addOption(
-            self::WEBKEY_SERVICE_URL_OPTION, null, InputOption::VALUE_REQUIRED, 'The webkey service url.'
+            self::WKS_URL_OPTION, null, InputOption::VALUE_REQUIRED, 'The webkey service url.'
         );
         $this->setHelp('This command allows you to sync OpenPGP public keys from webkey service.');
     }
@@ -86,7 +85,7 @@ class SyncKeyCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $this->webkeyServiceUrl = $input->getOption(self::WEBKEY_SERVICE_URL_OPTION);
+        $this->webkeyServiceUrl = $input->getOption(self::WKS_URL_OPTION);
 
         $helper = $this->getHelper('question');
         if (empty($this->webkeyServiceUrl)) {
@@ -110,7 +109,7 @@ class SyncKeyCommand extends Command
         $style = new SymfonyStyle($input, $output);
         $style->error(sprintf(
             '%s parameter is missing!',
-            self::WEBKEY_SERVICE_URL_OPTION,
+            self::WKS_URL_OPTION,
         ));
         return 1;
     }
