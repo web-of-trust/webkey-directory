@@ -31,7 +31,8 @@ final class RouteDefinitions
      */
     public function __invoke(App $app): void
     {
-        $app->getRouteCollector()->setDefaultInvocationStrategy(new RequestResponse());
+        $app->getRouteCollector()
+            ->setDefaultInvocationStrategy(new RequestResponse());
 
         $app->get(
             '/', Controller\HomeController::class
@@ -46,15 +47,9 @@ final class RouteDefinitions
             Controller\WkdController::class
         );
 
-        $app->get(
-            '/.well-known/openpgpkey/{domain}/policy',
-            Controller\WkdPolicyController::class
-        );
-
-        $app->get(
-            '/pks/lookup',
-            Controller\HkpController::class
-        );
+        $app->get('/.well-known/openpgpkey/{domain}/policy', function ($request, $response, array $args) {
+            return $response->withStatus(200)
+        });
 
         $app->group('/vks/v1', static function (RouteCollectorProxy $group) {
             $group->get(
@@ -67,5 +62,10 @@ final class RouteDefinitions
                 '/by-email/{email}', Controller\VksController::class
             );
         });
+
+        $app->get(
+            '/pks/lookup',
+            Controller\HkpController::class
+        );
     }
 }

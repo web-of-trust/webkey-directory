@@ -11,7 +11,6 @@ namespace Wkd\Application;
 
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
-use Wkd\Enum\Environment;
 
 /**
  * Abstract runner class
@@ -58,19 +57,6 @@ abstract class AbstractRunner implements RunnerInterface
     }
 
     /**
-     * Determine if the application is in the production environment.
-     *
-     * @return bool
-     */
-    public static function isProduction()
-    {
-        $environment = Environment::tryFrom(
-            self::env('APP_ENV') ?? ''
-        ) ?? Environment::Development;
-        return $environment === Environment::Production;
-    }
-
-    /**
      * Retrieve an environment-specific configuration setting
      *
      * @param string $key
@@ -97,61 +83,49 @@ abstract class AbstractRunner implements RunnerInterface
     {
         return [
             'app.name'      => \DI\env('APP_NAME', self::APP_NAME),
-            'app.env'       => \DI\env('APP_ENV', Environment::Development->value),
             'app.version'   => \DI\env('APP_VERSION', self::APP_VERSION),
             'error.display' => \DI\env('ERROR_DISPLAY', true),
             'error.log'     => \DI\env('ERROR_LOG', true),
             'error.details' => \DI\env('ERROR_DETAILS', true),
-            'logger.name'   => \DI\env('LOGGER_NAME', self::APP_NAME),
-            'logger.level'  => \DI\env('LOGGER_LEVEL', 'info'),
-            'logger.file'   => \DI\env('LOGGER_FILE', '/var/log/' . self::APP_NAME . '.log'),
         ];
     }
 
     private static function pathConfig(string $baseDir): array
     {
+        $storagePath = implode([
+            $baseDir,
+            DIRECTORY_SEPARATOR,
+            'storage',
+        ]);
+        $vksStorage = mplode([
+            $storagePath,
+            DIRECTORY_SEPARATOR,
+            'vks',
+        ]);
         return [
-            'path.storage' => implode([
-                $baseDir,
-                DIRECTORY_SEPARATOR,
-                'storage',
-            ]),
+            'path.storage' => $storagePath,
             'path.templates' => implode([
                 $baseDir,
                 DIRECTORY_SEPARATOR,
                 'templates',
             ]),
             'wkd.storage' => implode([
-                $baseDir,
-                DIRECTORY_SEPARATOR,
-                'storage',
+                $storagePath,
                 DIRECTORY_SEPARATOR,
                 'wkd',
             ]),
             'vks.fingerprint.storage' => implode([
-                $baseDir,
-                DIRECTORY_SEPARATOR,
-                'storage',
-                DIRECTORY_SEPARATOR,
-                'vks',
+                $vksStorage,
                 DIRECTORY_SEPARATOR,
                 'fingerprint',
             ]),
             'vks.keyid.storage' => implode([
-                $baseDir,
-                DIRECTORY_SEPARATOR,
-                'storage',
-                DIRECTORY_SEPARATOR,
-                'vks',
+                $vksStorage,
                 DIRECTORY_SEPARATOR,
                 'keyid',
             ]),
             'vks.email.storage' => implode([
-                $baseDir,
-                DIRECTORY_SEPARATOR,
-                'storage',
-                DIRECTORY_SEPARATOR,
-                'vks',
+                $vksStorage,
                 DIRECTORY_SEPARATOR,
                 'email',
             ]),

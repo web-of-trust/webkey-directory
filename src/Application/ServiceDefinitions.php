@@ -48,7 +48,7 @@ final class ServiceDefinitions
                     $container->get('app.version'),
                 );
                 $console->addCommands([
-                    new SyncKeyCommand(),
+                    new SyncKeyCommand($container),
                 ]);
 
                 return $console;

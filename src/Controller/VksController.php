@@ -16,6 +16,7 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
+use Slim\Views\PhpRenderer;
 
 /**
  * Vks controller class
@@ -30,10 +31,14 @@ class VksController extends BaseController
     /**
      * Vks controller constructor.
      *
+     * @param PhpRenderer $renderer
      * @param ContainerInterface $container
      */
-    public function __construct(private readonly ContainerInterface $container)
+    public function __construct(
+        private readonly PhpRenderer $renderer, ContainerInterface $container
+    )
     {
+        parent::__construct($container);
     }
 
     /**
@@ -47,15 +52,15 @@ class VksController extends BaseController
     {
         $storage = $location = '';
         if (!empty($args['fingerprint'])) {
-            $storage = $this->container->get('vks.fingerprint.storage');
+            $storage = $this->getContainer()->get('vks.fingerprint.storage');
             $location = $args['fingerprint'];
         }
         elseif (!empty($args['keyid'])) {
-            $storage = $this->container->get('vks.keyid.storage');
+            $storage = $this->getContainer()->get('vks.keyid.storage');
             $location = $args['keyid'];
         }
         elseif (!empty($args['email'])) {
-            $storage = $this->container->get('vks.email.storage');
+            $storage = $this->getContainer()->get('vks.email.storage');
             $location = $args['email'];
         }
         if (!empty($storage) && !empty($location)) {
@@ -77,6 +82,9 @@ class VksController extends BaseController
                 );
             }
         }
+        $response->getBody()->write(
+            'No key found for ' . $location
+        );
         return $response->withStatus(404);
     }
 }

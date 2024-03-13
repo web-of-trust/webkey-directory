@@ -9,6 +9,7 @@
 
 namespace Wkd\Command;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,19 +33,28 @@ use Wkd\Sync\SyncKey;
 class SyncKeyCommand extends Command
 {
     private const WEBKEY_PRIVACY_URL_OPTION  = 'webkey-service-url';
-    private const KEY_STORE_DIRECTORY_OPTION = 'key-store-directory';
 
     private ?string $webkeyPrivacyUrl;
-    private ?string $keyStoreDirectory;
+
+    /**
+     * Sync key command constructor.
+     *
+     * @param ContainerInterface $container
+     */
+    public function __construct(
+        private readonly ContainerInterface $container
+    )
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!empty($this->webkeyPrivacyUrl) && !empty($this->keyStoreDirectory)) {
+        if (!empty($this->webkeyPrivacyUrl)) {
             $sync = new SyncKey(
-                $this->webkeyPrivacyUrl, $this->keyStoreDirectory
+                $this->webkeyPrivacyUrl, $this->container
             );
             $sync->sync();
         }
@@ -62,8 +72,6 @@ class SyncKeyCommand extends Command
     {
         $this->addOption(
             self::WEBKEY_PRIVACY_URL_OPTION, null, InputOption::VALUE_REQUIRED, 'The webkey service url.'
-        )->addOption(
-            self::KEY_STORE_DIRECTORY_OPTION, null, InputOption::VALUE_REQUIRED, 'The the key store directory.'
         );
         $this->setHelp('This command allows you to sync OpenPGP public keys from webkey service.');
     }
@@ -74,7 +82,6 @@ class SyncKeyCommand extends Command
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $this->webkeyPrivacyUrl = $input->getOption(self::WEBKEY_PRIVACY_URL_OPTION);
-        $this->keyStoreDirectory = $input->getOption(self::KEY_STORE_DIRECTORY_OPTION);
 
         $helper = $this->getHelper('question');
         if (empty($this->webkeyPrivacyUrl)) {
@@ -82,13 +89,6 @@ class SyncKeyCommand extends Command
                 $input,
                 $output,
                 new Question('Please enter the webkey service url: '),
-            );
-        }
-        if (empty($this->keyStoreDirectory)) {
-            $this->keyStoreDirectory = $helper->ask(
-                $input,
-                $output,
-                new Question('Please enter the key store directory: '),
             );
         }
     }
@@ -104,9 +104,8 @@ class SyncKeyCommand extends Command
     {
         $style = new SymfonyStyle($input, $output);
         $style->error(sprintf(
-            '%s or %s parameter is missing!',
+            '%s parameter is missing!',
             self::WEBKEY_PRIVACY_URL_OPTION,
-            self::KEY_STORE_DIRECTORY_OPTION,
         ));
         return 1;
     }

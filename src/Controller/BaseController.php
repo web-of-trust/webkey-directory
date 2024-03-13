@@ -9,6 +9,7 @@
 
 namespace Wkd\Controller;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
@@ -23,6 +24,25 @@ use Psr\Http\Message\{
  */
 abstract class BaseController
 {
+    /**
+     * Base controller constructor.
+     *
+     * @param ContainerInterface $container
+     */
+    public function __construct(private readonly ContainerInterface $container)
+    {
+    }
+
+    /**
+     * Get psr container
+     *
+     * @return ContainerInterface
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
+
     /**
      * Perform action on controller by calling `self::action`.
      * 

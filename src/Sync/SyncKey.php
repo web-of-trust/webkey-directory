@@ -12,6 +12,7 @@ namespace Wkd\Sync;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PsrDiscovery\Discover;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
     RequestFactoryInterface,
@@ -32,90 +33,99 @@ final class SyncKey
     const HTTP_USER_AGENT = 'Webkey-Directory-Client';
     const REQUEST_METHOD  = 'GET';
 
-    const VKS_FINGERPRINT_STORE = 'vks' . DIRECTORY_SEPARATOR . 'fingerprint';
-    const VKS_KEYID_STORE       = 'vks' . DIRECTORY_SEPARATOR . 'keyid';
-    const VKS_EMAIL_STORE       = 'vks' . DIRECTORY_SEPARATOR . 'email';
-    const WKD_STORE             = 'wkd';
-
     private readonly ClientInterface $httpClient;
     private readonly RequestFactoryInterface $requestFactory;
-    private readonly Filesystem $filesystem;
 
+    /**
+     * Sync key constructor.
+     *
+     * @param string $webkeyServiceUrl
+     * @param ContainerInterface $container
+     */
     public function __construct(
         private readonly string $webkeyServiceUrl,
-        string $keyStoreDirectory
+        private readonly ContainerInterface $container
     )
     {
         $this->httpClient = Discover::httpClient();
         $this->requestFactory = Discover::httpRequestFactory();
-        $this->filesystem = new Filesystem(
-            new LocalFilesystemAdapter($keyStoreDirectory)
-        );
     }
 
     public function sync(): void
     {
         $response = $this->sendRequest()->getBody()->getContents();
-        if ($certificates = json_decode($response)) {
+        if ($certs = json_decode($response)) {
             $vksEmails = [];
             $wkdDomains = [];
-            foreach ($certificates as $certificate) {
-                if (empty($wkdDomains[$certificate->domain][$certificate->wkd_hash])) {
-                    $wkdDomains[$certificate->domain][$certificate->wkd_hash] = $certificate->key_data;
+
+            $fpFs = new Filesystem(
+                new LocalFilesystemAdapter(
+                    $this->container->get('vks.fingerprint.storage')
+                )
+            );
+            $keyFs = new Filesystem(
+                new LocalFilesystemAdapter(
+                    $this->container->get('vks.keyid.storage')
+                )
+            );
+            foreach ($certs as $cert) {
+                if (empty($wkdDomains[$cert->domain][$cert->wkd_hash])) {
+                    $wkdDomains[$cert->domain][$cert->wkd_hash] = $cert->key_data;
                 }
                 else {
-                    $wkdDomains[$certificate->domain][$certificate->wkd_hash] .= $certificate->key_data;
+                    $wkdDomains[$cert->domain][$cert->wkd_hash] .= $cert->key_data;
                 }
 
-                if ($email = self::extractEmail($certificate->primary_user)) {
+                if ($email = self::extractEmail($cert->primary_user)) {
                     if (empty($vksEmails[$email])) {
-                        $vksEmails[$email] = $certificate->key_data;
+                        $vksEmails[$email] = $cert->key_data;
                     }
                     else {
-                        $vksEmails[$email] .= $certificate->key_data;
+                        $vksEmails[$email] .= $cert->key_data;
                     }
                 }
 
-                $this->filesystem->write(
-                    implode([
-                        self::VKS_FINGERPRINT_STORE,
-                        DIRECTORY_SEPARATOR,
-                        strtoupper($certificate->fingerprint),
-                    ]),
-                    $certificate->key_data
+                $fpFs->write(
+                    strtoupper($cert->fingerprint),
+                    $cert->key_data
                 );
-                $this->filesystem->write(
-                    implode([
-                        self::VKS_KEYID_STORE,
-                        DIRECTORY_SEPARATOR,
-                        strtoupper($certificate->key_id),
-                    ]),
-                    $certificate->key_data
-                );
-            }
-            foreach ($vksEmails as $email => $keyData) {
-                $this->filesystem->write(
-                    implode([
-                        self::VKS_EMAIL_STORE,
-                        DIRECTORY_SEPARATOR,
-                        $email,
-                    ]),
-                    $keyData
+                $keyFs->write(
+                    strtoupper($cert->key_id),
+                    $cert->key_data
                 );
             }
 
-            foreach ($wkdDomains as $domain => $wkdHashs) {
-                foreach ($wkdHashs as $hash => $keyData) {
-                    $this->filesystem->write(
-                        implode([
-                            self::WKD_STORE,
-                            DIRECTORY_SEPARATOR,
-                            $domain,
-                            DIRECTORY_SEPARATOR,
-                            $hash,
-                        ]),
+            if (!empty($vksEmails)) {
+                $vksFs = new Filesystem(
+                    new LocalFilesystemAdapter(
+                        $this->container->get('vks.email.storage')
+                    )
+                );
+                foreach ($vksEmails as $email => $keyData) {
+                    $vksFs->write(
+                        $email,
                         $keyData
                     );
+                }
+            }
+
+            if (!empty($wkdDomains)) {
+                $wkdFs = new Filesystem(
+                    new LocalFilesystemAdapter(
+                        $this->container->get('wkd.storage')
+                    )
+                );
+                foreach ($wkdDomains as $domain => $wkdHashs) {
+                    foreach ($wkdHashs as $hash => $keyData) {
+                        $wkdFs->write(
+                            implode([
+                                $domain,
+                                DIRECTORY_SEPARATOR,
+                                $hash,
+                            ]),
+                            $keyData
+                        );
+                    }
                 }
             }
         }

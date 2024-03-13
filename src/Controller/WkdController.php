@@ -16,6 +16,7 @@ use Psr\Http\Message\{
     ResponseInterface,
     ServerRequestInterface,
 };
+use Slim\Views\PhpRenderer;
 
 /**
  * Wkd controller class
@@ -31,10 +32,14 @@ class WkdController extends BaseController
     /**
      * Wkd controller constructor.
      *
+     * @param PhpRenderer $renderer
      * @param ContainerInterface $container
      */
-    public function __construct(private readonly ContainerInterface $container)
+    public function __construct(
+        private readonly PhpRenderer $renderer, ContainerInterface $container
+    )
     {
+        parent::__construct($container);
     }
 
     /**
@@ -51,7 +56,7 @@ class WkdController extends BaseController
         if (!empty($domain) && !empty($hash)) {
             $filesystem = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->container->get('wkd.storage')
+                    $this->getContainer()->get('wkd.storage')
                 )
             );
             $location = implode([
@@ -74,6 +79,9 @@ class WkdController extends BaseController
                 );
             }
         }
+        $response->getBody()->write(
+            'No key found for this email address.'
+        );
         return $response->withStatus(404);
     }
 }
