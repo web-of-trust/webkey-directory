@@ -12,10 +12,8 @@ namespace Wkd\Application;
 use DI\ContainerBuilder;
 use PsrDiscovery\Discover;
 use Psr\Container\ContainerInterface as Container;
-use Psr\Log\{
-    LoggerInterface,
-    NullLogger,
-};
+use Psr\Log\LoggerInterface;
+use Slim\Logger;
 use Slim\Views\PhpRenderer;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Wkd\Command\SyncKeyCommand;
@@ -38,7 +36,7 @@ final class ServiceDefinitions
     public function __invoke(ContainerBuilder $builder): void
     {
         $builder->addDefinitions([
-            LoggerInterface::class => fn () => Discover::log() ?? new NullLogger(),
+            LoggerInterface::class => fn () => Discover::log() ?? new Logger(),
             PhpRenderer::class => fn (Container $container) => new PhpRenderer(
                 $container->get('path.templates')
             ),
