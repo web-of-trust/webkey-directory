@@ -57,18 +57,6 @@ abstract class AbstractRunner implements RunnerInterface
     }
 
     /**
-     * Retrieve an environment-specific configuration setting
-     *
-     * @param string $key
-     * @return string|null
-     */
-    public static function env(string $key): string|null
-    {
-        $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
-        return $value ?: null;
-    }
-
-    /**
      * Load services
      * 
      * @param ContainerBuilder $builder
