@@ -26,6 +26,15 @@ Retrieves the key with the given `Email Address`. Only exact matches are accepte
 Lookup by email address requires opt-in by the owner of the email address.
 The returned key is ASCII Armored, and has a content-type of `application/pgp-keys`.
 
+## HTTP Keyserver Protocol (HKP) Interface
+Webkey Directory implements a subset of the HKP protocol so that OpenPGP tools can discover keys
+* GET /pks/lookup?op=get&search=<QUERY>
+Returns an ASCII Armored key matching the query. Query may be:
+* An exact email address query of the form `localpart@example.org`.
+* A hexadecimal representation of a long KeyID (e.g., `069C0C348DD82C19`, optionally prefixed by 0x).
+* A hexadecimal representation of a Fingerprint (e.g., `8E8C33FA4626337976D97978069C0C348DD82C19`,
+  optionally prefixed by 0x).
+
 ## Licensing
 [GNU Affero General Public License v3.0](LICENSE)
 
