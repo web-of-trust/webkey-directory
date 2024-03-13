@@ -52,9 +52,9 @@ final class SlimRunner extends AbstractRunner
         $app->addRoutingMiddleware();
         $app->addBodyParsingMiddleware();
         $app->addErrorMiddleware(
-            displayErrorDetails: (bool) $container->get('error.display'),
+            displayErrorDetails: (bool) $container->get('error.display.details'),
             logErrors: (bool) $container->get('error.log'),
-            logErrorDetails: (bool) $container->get('error.details'),
+            logErrorDetails: (bool) $container->get('error.log.details'),
             logger: $container->get(LoggerInterface::class),
         );
     }

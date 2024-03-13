@@ -91,13 +91,13 @@ composer require laminas/laminas-diactoros
 cp env .env
 ```
 Environment variables:
-| Name              | Description                                 | Default          |
-|-------------------|---------------------------------------------|------------------|
-| APP_NAME          | Application name                            | Webkey Directory |
-| APP_VERSION       | Application version                         | 1.0.0            |
-| ERROR_DISPLAY     | Whether or not to display the error details | false            |
-| ERROR_LOG         | Whether or not to log errors                | true             |
-| ERROR_DETAILS     | Whether or not to log error details         | false            |
+| Name                  | Description                                 | Default          |
+|-----------------------|---------------------------------------------|------------------|
+| APP_NAME              | Application name                            | Webkey Directory |
+| APP_VERSION           | Application version                         | 1.0.0            |
+| ERROR_DISPLAY_DETAILS | Whether or not to display the error details | false            |
+| ERROR_LOG             | Whether or not to log errors                | true             |
+| ERROR_LOG_DETAILS     | Whether or not to log error details         | false            |
 
 ## Licensing
 [GNU Affero General Public License v3.0](LICENSE)

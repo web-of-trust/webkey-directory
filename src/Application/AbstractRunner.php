@@ -70,11 +70,11 @@ abstract class AbstractRunner implements RunnerInterface
     private static function appConfig(): array
     {
         return [
-            'app.name'      => \DI\env('APP_NAME', self::APP_NAME),
-            'app.version'   => \DI\env('APP_VERSION', self::APP_VERSION),
-            'error.display' => \DI\env('ERROR_DISPLAY', true),
-            'error.log'     => \DI\env('ERROR_LOG', true),
-            'error.details' => \DI\env('ERROR_DETAILS', true),
+            'app.name'              => \DI\env('APP_NAME', self::APP_NAME),
+            'app.version'           => \DI\env('APP_VERSION', self::APP_VERSION),
+            'error.display.details' => \DI\env('ERROR_DISPLAY_DETAILS', false),
+            'error.log'             => \DI\env('ERROR_LOG', true),
+            'error.log.details'     => \DI\env('ERROR_LOG_DETAILS', true),
         ];
     }
 
