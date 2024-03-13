@@ -11,7 +11,9 @@ is a standard for discovery of OpenPGP keys by email address, via the domain of 
 It is used to discover unknown keys in some email clients.
 
 ## HTTP Keyserver Protocol (HKP) Interface
-Webkey Directory implements a subset of the HKP protocol so that OpenPGP tools can discover keys
+Webkey Directory implements a subset of the
+[HKP](https://datatracker.ietf.org/doc/html/draft-gallagher-openpgp-hkp)
+protocol so that OpenPGP tools can discover keys
 * `GET /pks/lookup?op=get&search=<QUERY>`
 
 Returns an ASCII Armored key matching the query. Query may be:
