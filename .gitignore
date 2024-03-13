@@ -14,3 +14,6 @@ cache.properties
 composer.phar
 composer.lock
 docker*
+.env
+.env.backup
+.env.production
