@@ -97,7 +97,7 @@ Environment variables:
 | APP_VERSION           | Application version                         | 1.0.0            |
 | ERROR_DISPLAY_DETAILS | Whether or not to display the error details | false            |
 | ERROR_LOG             | Whether or not to log errors                | true             |
-| ERROR_LOG_DETAILS     | Whether or not to log error details         | false            |
+| ERROR_LOG_DETAILS     | Whether or not to log error details         | true             |
 
 ### Web Servers
 
