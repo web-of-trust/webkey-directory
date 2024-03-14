@@ -95,8 +95,9 @@ cp env .env
 Environment variables:
 | Name                  | Description                                 | Default          |
 |-----------------------|---------------------------------------------|------------------|
-| APP_NAME              | Application name                            | Webkey Directory |
-| APP_VERSION           | Application version                         | 1.0.0            |
+| APP_NAME              | Application name                            |                  |
+| APP_VERSION           | Application version                         |                  |
+| APP_BASE_PATH         | Application base path                       |                  |
 | ERROR_DISPLAY_DETAILS | Whether or not to display the error details | false            |
 | ERROR_LOG             | Whether or not to log errors                | true             |
 | ERROR_LOG_DETAILS     | Whether or not to log error details         | true             |
