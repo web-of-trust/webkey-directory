@@ -55,6 +55,7 @@ class HomeController extends BaseController
         $routeParser = $app->getRouteCollector()->getRouteParser();
         return $this->render($response, 'index.php', [
             'title' => $this->getContainer()->get('app.name'),
+            'basePath' => $app->getBasePath(),
             'homeUrl' => $routeParser->urlFor('home'),
             'searchUrl' => $routeParser->urlFor('search'),
         ]);

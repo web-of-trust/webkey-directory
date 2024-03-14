@@ -103,6 +103,7 @@ class SearchController extends BaseController
 
         return $this->render($response, 'search.php', [
             'title' => $this->getContainer()->get('app.name'),
+            'basePath' => $app->getBasePath(),
             'search' => $search,
             'homeUrl' => $routeParser->urlFor('home'),
             'searchUrl' => $routeParser->urlFor('search'),

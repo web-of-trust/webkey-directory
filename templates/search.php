@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr" class="">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/assets/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="<?php echo $basePath; ?>assets/bootstrap.min.css" type="text/css"/>
     <title><?php echo $title; ?></title>
 </head>
 <body lang="en">
@@ -26,7 +26,7 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" class="form-control" name="search" placeholder="Search by Email Address / Key ID / Fingerprint">
                                 <button class="btn btn-primary">
-                                    <img src="/assets/search.svg" style="width: 1em; padding-bottom: 4px;"> Search
+                                    <img src="<?php echo $basePath; ?>assets/search.svg" style="width: 1em; padding-bottom: 4px;"> Search
                                 </button>
                             </div>
                         </div>
