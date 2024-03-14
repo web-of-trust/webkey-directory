@@ -87,9 +87,11 @@ composer require laminas/laminas-diactoros
 ```
 
 ### Environment configuration.
+Copy over env.
 ```sh
 cp env .env
 ```
+
 Environment variables:
 | Name                  | Description                                 | Default          |
 |-----------------------|---------------------------------------------|------------------|
