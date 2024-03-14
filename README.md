@@ -110,14 +110,14 @@ display_errors = 0
 ### Web Servers
 
 #### Nginx web server
-This is an example Nginx virtual host configuration for the domain example.com.
+This is an example Nginx virtual host configuration for the domain example.org.
 It listens for inbound HTTP connections on port 80. It assumes a PHP-FPM server is running on port 9123.
 You should update the server_name, error_log, access_log, and root directives with your own values.
 The root directive is the path to your application’s public document root directory.
 ```nginx
 server {
     listen 80;
-    server_name example.com;
+    server_name wkd.example.org;
     index index.php;
     error_log /path/to/example.error.log;
     access_log /path/to/example.access.log;
@@ -155,9 +155,9 @@ composer require guzzlehttp/guzzle
 
 Run `bin/console webkey:sync` command with parameter `--wks-url` to synchronize keys.
 
-Example: To synchronize keys which is host at https://webkey.example.org
+Example: To synchronize keys which is host at https://wkp.example.org
 ```bash
-bin/console webkey:sync --wks-url=https://webkey.example.org/api/v1/certificate
+bin/console webkey:sync --wks-url=https://wkp.example.org/api/v1/certificate
 ```
 
 ## Licensing
