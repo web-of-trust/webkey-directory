@@ -101,7 +101,7 @@ Environment variables:
 
 ### Web Servers
 
-#### Nginx configuration
+#### Nginx web server
 This is an example Nginx virtual host configuration for the domain example.com.
 It listens for inbound HTTP connections on port 80. It assumes a PHP-FPM server is running on port 9123.
 You should update the server_name, error_log, access_log, and root directives with your own values.
@@ -129,6 +129,25 @@ server {
         fastcgi_pass 127.0.0.1:9123;
     }
 }
+```
+
+#### Other Web Servers
+For other Web Servers see [Slim 4 Documentation](https://www.slimframework.com/docs/v4/start/web-servers.html)
+
+## Synchronize OpenPGP Keys
+Webkey Directory allow to synchronize OpenPGP Keys from webkey service which provided by (Webkey Privacy)[https://github.com/web-of-trust/webkey-privacy]
+
+This function using [PSR-17: HTTP Factories](https://www.php-fig.org/psr/psr-17/), [PSR-18: HTTP Client](https://www.php-fig.org/psr/psr-18/) for requesting to webkey service.
+Make sure to install package(s) providing ["http client implementation"](https://packagist.org/providers/psr/http-client-implementation) & ["http factory implementation"](https://packagist.org/providers/psr/http-factory-implementation).
+The recommended package is [Guzzle](https://docs.guzzlephp.org) which provide both PSR-17 & PSR-18.
+
+```bash
+composer require guzzlehttp/guzzle
+```
+
+Run below command to synchronize OpenPGP Keys
+```bash
+bin/console webkey:sync --wks-url=https://webkey-privacy/api/v1/certificate
 ```
 
 ## Licensing
