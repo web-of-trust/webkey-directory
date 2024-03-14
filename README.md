@@ -93,14 +93,14 @@ cp env .env
 ```
 
 Environment variables:
-| Name                  | Description                                 | Default          |
-|-----------------------|---------------------------------------------|------------------|
-| APP_NAME              | Application name                            |                  |
-| APP_PATH              | Application path                            |                  |
-| APP_VERSION           | Application version                         |                  |
-| ERROR_DISPLAY_DETAILS | Whether or not to display the error details | false            |
-| ERROR_LOG             | Whether or not to log errors                | true             |
-| ERROR_LOG_DETAILS     | Whether or not to log error details         | true             |
+| Name                  | Description                                 |
+|-----------------------|---------------------------------------------|
+| APP_NAME              | Application name                            |
+| APP_PATH              | Application path                            |
+| APP_VERSION           | Application version                         |
+| ERROR_DISPLAY_DETAILS | Whether or not to display the error details |
+| ERROR_LOG             | Whether or not to log errors                |
+| ERROR_LOG_DETAILS     | Whether or not to log error details         |
 
 Disable error display in production.
 You should also ensure that your PHP installation is configured to not display errors with the php.ini setting:
