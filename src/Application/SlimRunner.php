@@ -35,7 +35,7 @@ final class SlimRunner extends AbstractRunner
 
         $app = Bridge::create($this->getContainer());
         $app->setBasePath(
-            $this->getContainer()->get('app.path') ?? self::APP_BASE_PATH
+            $this->getContainer()->get('app.path') ?? self::APP_PATH
         );
         self::registerMiddlewares($app);
         self::registerRoutes($app);
