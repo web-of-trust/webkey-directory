@@ -54,13 +54,13 @@ class HkpController extends BaseController
                 $storage = $this->getContainer()->get(
                     'vks.fingerprint.storage'
                 );
-                $location = strtoupper($search);
+                $location = strtolower($search);
             }
             elseif ($len === 8) {
                 $storage = $this->getContainer()->get(
                     'vks.keyid.storage'
                 );
-                $location = strtoupper($search);
+                $location = strtolower($search);
             }
         }
 

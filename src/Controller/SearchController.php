@@ -79,7 +79,7 @@ class SearchController extends BaseController
                 $storage = $this->getContainer()->get(
                     'vks.fingerprint.storage'
                 );
-                $location = strtoupper($search);
+                $location = strtolower($search);
                 $keyUrl = $routeParser->urlFor(
                     'by-fingerprint', ['fingerprint' => $location]
                 );
@@ -88,7 +88,7 @@ class SearchController extends BaseController
                 $storage = $this->getContainer()->get(
                     'vks.keyid.storage'
                 );
-                $location = strtoupper($search);
+                $location = strtolower($search);
                 $keyUrl = $routeParser->urlFor(
                     'by-routeName', ['keyid' => $location]
                 );

@@ -55,14 +55,14 @@ class SynKeyCommandTest extends TestCase
                 file_exists(implode([
                     $fpStorage,
                     DIRECTORY_SEPARATOR,
-                    strtoupper($cert->fingerprint),
+                    strtolower($cert->fingerprint),
                 ]))
             );
             $this->assertTrue(
                 file_exists(implode([
                     $keyidStorage,
                     DIRECTORY_SEPARATOR,
-                    strtoupper($cert->key_id),
+                    strtolower($cert->key_id),
                 ]))
             );
             $this->assertTrue(

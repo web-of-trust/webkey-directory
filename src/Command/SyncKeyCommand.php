@@ -160,11 +160,11 @@ class SyncKeyCommand extends Command
                 }
 
                 $fpFs->write(
-                    strtoupper($cert->fingerprint),
+                    strtolower($cert->fingerprint),
                     $cert->key_data
                 );
                 $keyFs->write(
-                    strtoupper($cert->key_id),
+                    strtolower($cert->key_id),
                     $cert->key_data
                 );
             }

@@ -120,7 +120,7 @@ class ControllersTest extends TestCase
         $controller = $this->runner->getContainer()->get(VksController::class);
 
         $this->app->get('/vks/by-fingerprint/{fingerprint}', $controller);
-        $request = $this->createRequest('GET', '/vks/by-fingerprint/6FFAD46F1A77B1C37D3B4AFC5E088B143FDA2105');
+        $request = $this->createRequest('GET', '/vks/by-fingerprint/6ffad46f1a77b1c37d3b4afc5e088b143fda2105');
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
@@ -131,7 +131,7 @@ class ControllersTest extends TestCase
 
         $this->app = $this->getAppInstance();
         $this->app->get('/vks/by-keyid/{keyid}', $controller);
-        $request = $this->createRequest('GET', '/vks/by-keyid/5A28D96A75CB054F');
+        $request = $this->createRequest('GET', '/vks/by-keyid/5a28d96a75cb054f');
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
