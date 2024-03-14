@@ -6,6 +6,7 @@ use DI\Bridge\Slim\Bridge;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Slim\App;
+use Wkd\Application\RouteDefinitions;
 use Wkd\Application\SlimRunner;
 
 class TestCase extends PHPUnitTestCase
@@ -14,8 +15,6 @@ class TestCase extends PHPUnitTestCase
 
     protected $runner;
     protected $faker;
-
-    protected static $server;
 
     protected function setUp(): void
     {
@@ -31,6 +30,7 @@ class TestCase extends PHPUnitTestCase
     {
         $app = Bridge::create($this->runner->getContainer());
         $app->addRoutingMiddleware();
+        (new RouteDefinitions())($app);
         return $app;
     }
 }

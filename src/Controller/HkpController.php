@@ -87,6 +87,6 @@ class HkpController extends BaseController
         $response->getBody()->write(
             'No key found for ' . $search
         );
-        return $response;
+        return $response->withStatus(404);
     }
 }
