@@ -16,7 +16,13 @@
             "Wkd\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Wkd\\Tests\\": "tests/"
+        }
+    },
     "require": {
+        "php": "^8.1 | ^8.2",
         "league/flysystem": "^3.25",
         "php-di/slim-bridge": "^3.4",
         "psr-discovery/http-client-implementations": "^1.1",
@@ -27,8 +33,15 @@
         "vlucas/phpdotenv": "^5.6"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.0",
         "guzzlehttp/guzzle": "^7.8",
         "monolog/monolog": "^3.0",
-        "phpunit/phpunit": "^7.0 | ^8.0 | ^9.0 | ^10.0"
+        "phpunit/phpunit": "^9.0 | ^10.0",
+        "phpspec/prophecy-phpunit": "^2.0"
+    },
+    "scripts": {
+        "test": [
+            "vendor/bin/phpunit"
+        ]
     }
 }
