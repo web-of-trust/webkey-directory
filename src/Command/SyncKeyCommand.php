@@ -62,12 +62,12 @@ class SyncKeyCommand extends Command
     ): int
     {
         if (!empty($this->wksUrl)) {
-            $this->syncKey();
+            $this->synchronize();
         }
         else {
             return $this->missingParameter($input, $output);
         }
-        $output->writeln('Web keys successfully synced!');
+        $output->writeln('Web keys successfully synchronized!');
         return 0;
     }
 
@@ -125,7 +125,7 @@ class SyncKeyCommand extends Command
         return 1;
     }
 
-    private function syncKey(): void
+    private function synchronize(): void
     {
         $response = $this->sendRequest()->getBody()->getContents();
         if ($certs = json_decode($response)) {
@@ -219,7 +219,7 @@ class SyncKeyCommand extends Command
         return $httpClient->sendRequest($httpRequest);
     }
 
-    private static function extractEmail(string $userId): string
+    public static function extractEmail(string $userId): string
     {
         if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
             return $matches[0];

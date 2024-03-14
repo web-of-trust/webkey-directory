@@ -15,6 +15,8 @@ class TestCase extends PHPUnitTestCase
     protected $runner;
     protected $faker;
 
+    protected static $server;
+
     protected function setUp(): void
     {
         parent::setUp();

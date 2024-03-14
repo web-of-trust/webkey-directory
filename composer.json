@@ -33,11 +33,12 @@
         "vlucas/phpdotenv": "^5.6"
     },
     "require-dev": {
+        "donatj/mock-webserver": "^2.7",
         "fakerphp/faker": "^1.0",
         "guzzlehttp/guzzle": "^7.8",
         "monolog/monolog": "^3.0",
-        "phpunit/phpunit": "^9.0 | ^10.0",
-        "phpspec/prophecy-phpunit": "^2.0"
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.0 | ^10.0"
     },
     "scripts": {
         "test": [
