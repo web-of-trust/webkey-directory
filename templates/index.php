@@ -2,23 +2,36 @@
 <html lang="en" dir="ltr" class="">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/assets/site.css" type="text/css"/>
+    <link rel="stylesheet" href="/assets/bootstrap.min.css" type="text/css"/>
     <title><?php echo $title; ?></title>
 </head>
 <body lang="en">
-    <div class="card">
-        <h1><a class="brand" href="<?php echo $homeUrl; ?>"><?php echo $title; ?></a></h1>
-        <form action="<?php echo $searchUrl; ?>" method="GET">
-            <div class="search">
-                <input type="text" class="searchTerm" id="search" name="search" autofocus placeholder="Search by Email Address / Key ID / Fingerprint">
-                <button type="submit" class="searchButton button">
-                    <img src="/assets/search.svg" style="width: 1em; padding-bottom: 4px;"> Search
-                </button>
+    <div class="container py-3 my-5">
+        <div class="card">
+            <div class="card-header text-center">
+                <p class="h3"><a class="brand" href="<?php echo $homeUrl; ?>"><?php echo $title; ?></a></p>
             </div>
-        </form>
+            <div class="card-body">
+                <form action="<?php echo $searchUrl; ?>" method="GET">
+                    <div class="row height d-flex justify-content-center align-items-center">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <i class="fa fa-search"></i>
+                                <input type="text" class="form-control" name="search" placeholder="Search by Email Address / Key ID / Fingerprint">
+                                <button class="btn btn-primary">
+                                    <img src="/assets/search.svg" style="width: 1em; padding-bottom: 4px;"> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="attribution">
-        <p>Powered by <a href="https://github.com/web-of-trust">Web Of Trust</a></p>
-    </div>
+    <footer class="footer fixed-bottom mt-auto py-3 bg-light">
+      <div class="container text-center">
+            Powered by <a href="https://github.com/web-of-trust">Web Of Trust</a>
+      </div>
+    </footer>
 </body>
 </html>
