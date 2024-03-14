@@ -9,7 +9,7 @@
     <div class="container py-3 my-5">
         <div class="card">
             <div class="card-header text-center">
-                <p class="h3"><a class="brand" href="<?php echo $homeUrl; ?>"><?php echo $title; ?></a></p>
+                <p class="h3"><a class="text-dark" href="<?php echo $homeUrl; ?>"><?php echo $title; ?></a></p>
             </div>
             <div class="card-body text-center">
                 <?php if ($keyFound): ?>
@@ -38,7 +38,7 @@
     </div>
     <footer class="footer fixed-bottom mt-auto py-3 bg-light">
       <div class="container text-center">
-            Powered by <a href="https://github.com/web-of-trust">Web Of Trust</a>
+            Powered by <a href="https://github.com/web-of-trust" class="text-dark">Web Of Trust</a>
       </div>
     </footer>
 </body>
