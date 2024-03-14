@@ -34,6 +34,7 @@ final class SlimRunner extends AbstractRunner
         AppFactory::setStreamFactory(Discover::httpStreamFactory());
 
         $app = Bridge::create($this->getContainer());
+        $app->setBasePath($this->getContainer()->get('app.path'));
         self::registerMiddlewares($app);
         self::registerRoutes($app);
 

@@ -21,8 +21,9 @@ use Psr\Container\ContainerInterface;
  */
 abstract class AbstractRunner implements RunnerInterface
 {
-    const APP_NAME    = 'Webkey Directory';
-    const APP_VERSION = '1.0.0';
+    const APP_NAME      = 'Webkey Directory';
+    const APP_VERSION   = '1.0.0';
+    const APP_BASE_PATH = '/';
 
     /**
      * Psr container
@@ -72,6 +73,7 @@ abstract class AbstractRunner implements RunnerInterface
         return [
             'app.name'              => \DI\env('APP_NAME', self::APP_NAME),
             'app.version'           => \DI\env('APP_VERSION', self::APP_VERSION),
+            'app.path'              => \DI\env('APP_BASE_PATH', self::APP_BASE_PATH),
             'error.display.details' => \DI\env('ERROR_DISPLAY_DETAILS', false),
             'error.log'             => \DI\env('ERROR_LOG', true),
             'error.log.details'     => \DI\env('ERROR_LOG_DETAILS', true),

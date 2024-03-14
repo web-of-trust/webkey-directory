@@ -35,29 +35,29 @@ final class RouteDefinitions
             ->setDefaultInvocationStrategy(new RequestResponse());
 
         $app->get(
-            '/', Controller\HomeController::class
+            '', Controller\HomeController::class
         )->setName('home');
 
         $app->get(
-            '/search', Controller\SearchController::class
+            'search', Controller\SearchController::class
         )->setName('search');
 
         $app->get(
-            '/.well-known/openpgpkey/{domain}/hu/{hash}',
+            '.well-known/openpgpkey/{domain}/hu/{hash}',
             Controller\WkdController::class
         );
 
         $app->get(
-            '/.well-known/openpgpkey/hu/{hash}',
+            '.well-known/openpgpkey/hu/{hash}',
             Controller\WkdController::class
         );
 
         $app->get(
-            '/.well-known/openpgpkey/{domain}/policy',
+            '.well-known/openpgpkey/{domain}/policy',
             fn ($request, $response, array $args) => $response->withStatus(200)
         );
 
-        $app->group('/vks/v1', function (RouteCollectorProxy $group) {
+        $app->group('vks/v1', function (RouteCollectorProxy $group) {
             $group->get(
                 '/by-fingerprint/{fingerprint}', Controller\VksController::class
             )->setName('by-fingerprint');
@@ -70,7 +70,7 @@ final class RouteDefinitions
         });
 
         $app->get(
-            '/pks/lookup',
+            'pks/lookup',
             Controller\HkpController::class
         );
     }
