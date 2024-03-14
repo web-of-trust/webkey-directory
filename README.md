@@ -86,7 +86,7 @@ Laminas Diactoros
 composer require laminas/laminas-diactoros
 ```
 
-### Copy over env configuration.
+### Environment configuration.
 ```sh
 cp env .env
 ```
@@ -98,6 +98,12 @@ Environment variables:
 | ERROR_DISPLAY_DETAILS | Whether or not to display the error details | false            |
 | ERROR_LOG             | Whether or not to log errors                | true             |
 | ERROR_LOG_DETAILS     | Whether or not to log error details         | true             |
+
+Disable error display in production.
+You should also ensure that your PHP installation is configured to not display errors with the php.ini setting:
+```ini
+display_errors = 0
+```
 
 ### Web Servers
 
