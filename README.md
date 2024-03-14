@@ -145,7 +145,9 @@ The recommended package is [Guzzle](https://docs.guzzlephp.org) which provide bo
 composer require guzzlehttp/guzzle
 ```
 
-Run below command to synchronize OpenPGP Keys of the Webkey Privacy which is host at https://webkey.example.org
+Run `bin/console webkey:sync` command with parameter `--wks-url` to synchronize OpenPGP keys.
+
+Example: Run below command to synchronize OpenPGP keys of the Webkey Privacy which is host at https://webkey.example.org
 ```bash
 bin/console webkey:sync --wks-url=https://webkey.example.org/api/v1/certificate
 ```
