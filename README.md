@@ -134,7 +134,7 @@ server {
 #### Other Web Servers
 For other Web Servers see [Slim 4 Documentation](https://www.slimframework.com/docs/v4/start/web-servers.html)
 
-## Synchronize OpenPGP Keys
+## OpenPGP Keys Synchronization
 Webkey Directory allow to synchronize OpenPGP Keys from webkey service which provided by (Webkey Privacy)[https://github.com/web-of-trust/webkey-privacy]
 
 This function using [PSR-17: HTTP Factories](https://www.php-fig.org/psr/psr-17/), [PSR-18: HTTP Client](https://www.php-fig.org/psr/psr-18/) for requesting to webkey service.
