@@ -7,6 +7,8 @@ use Wkd\Controller\{
     HomeController,
     SearchController,
     HkpController,
+    VksController,
+    WkdController,
 };
 use PsrDiscovery\Discover;
 use Psr\Http\Message\{
@@ -106,6 +108,58 @@ class ControllersTest extends TestCase
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
 
+        $payload = (string) $response->getBody();
+        $this->assertStringContainsString(
+            'BEGIN PGP PUBLIC KEY BLOCK',
+            $payload
+        );
+    }
+
+    public function testVksController()
+    {
+        $controller = $this->runner->getContainer()->get(VksController::class);
+
+        $this->app->get('/vks/by-fingerprint/{fingerprint}', $controller);
+        $request = $this->createRequest('GET', '/vks/by-fingerprint/6FFAD46F1A77B1C37D3B4AFC5E088B143FDA2105');
+        $response = $this->app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $payload = (string) $response->getBody();
+        $this->assertStringContainsString(
+            'BEGIN PGP PUBLIC KEY BLOCK',
+            $payload
+        );
+
+        $this->app = $this->getAppInstance();
+        $this->app->get('/vks/by-keyid/{keyid}', $controller);
+        $request = $this->createRequest('GET', '/vks/by-keyid/5A28D96A75CB054F');
+        $response = $this->app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $payload = (string) $response->getBody();
+        $this->assertStringContainsString(
+            'BEGIN PGP PUBLIC KEY BLOCK',
+            $payload
+        );
+
+        $this->app = $this->getAppInstance();
+        $this->app->get('/vks/by-email/{email}', $controller);
+        $request = $this->createRequest('GET', '/vks/by-email/info%40webkey.net.vn');
+        $response = $this->app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $payload = (string) $response->getBody();
+        $this->assertStringContainsString(
+            'BEGIN PGP PUBLIC KEY BLOCK',
+            $payload
+        );
+    }
+
+    public function testWkdController()
+    {
+        $controller = $this->runner->getContainer()->get(WkdController::class);
+
+        $this->app->get('/wkd/{domain}/hu/{hash}', $controller);
+        $request = $this->createRequest('GET', '/wkd/webkey.net.vn/hu/lg6qup7uhmzijgzrtzsf2r4y3cs5d2ej');
+        $response = $this->app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
         $this->assertStringContainsString(
             'BEGIN PGP PUBLIC KEY BLOCK',
