@@ -147,7 +147,7 @@ composer require guzzlehttp/guzzle
 
 Run below command to synchronize OpenPGP Keys
 ```bash
-bin/console webkey:sync --wks-url=https://webkey-privacy/api/v1/certificate
+bin/console webkey:sync --wks-url=https://webkey.example.org/api/v1/certificate
 ```
 
 ## Licensing
