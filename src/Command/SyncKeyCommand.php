@@ -10,7 +10,9 @@
 namespace Wkd\Command;
 
 use League\Flysystem\Filesystem;
+use League\Flysystem\Visibility;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use PsrDiscovery\Discover;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -148,14 +150,20 @@ class SyncKeyCommand extends Command
             $vksEmails = [];
             $wkdDomains = [];
 
+            $visibility = new PortableVisibilityConverter(
+                filePrivate: 0641,
+                defaultForDirectories: Visibility::PUBLIC,
+            );
             $fpFs = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->container->get('vks.fingerprint.storage')
+                    $this->container->get('vks.fingerprint.storage'),
+                    $visibility
                 )
             );
             $keyFs = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->container->get('vks.keyid.storage')
+                    $this->container->get('vks.keyid.storage'),
+                    $visibility
                 )
             );
             foreach ($certs as $cert) {
@@ -188,7 +196,8 @@ class SyncKeyCommand extends Command
             if (!empty($vksEmails)) {
                 $vksFs = new Filesystem(
                     new LocalFilesystemAdapter(
-                        $this->container->get('vks.email.storage')
+                        $this->container->get('vks.email.storage'),
+                        $visibility
                     )
                 );
                 foreach ($vksEmails as $email => $keyData) {
@@ -202,7 +211,8 @@ class SyncKeyCommand extends Command
             if (!empty($wkdDomains)) {
                 $wkdFs = new Filesystem(
                     new LocalFilesystemAdapter(
-                        $this->container->get('wkd.storage')
+                        $this->container->get('wkd.storage'),
+                        $visibility
                     )
                 );
                 foreach ($wkdDomains as $domain => $wkdHashs) {
