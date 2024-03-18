@@ -238,7 +238,7 @@ class SyncKeyCommand extends Command
     private static function encodeArmor(string $data): string
     {
         return implode([
-            self::PUBLIC_KEY_BLOCK_BEGIN,
+            self::PUBLIC_KEY_BLOCK_BEGIN . "\n",
             chunk_split(base64_encode($data), 76, "\n"),
             '=' . self::crc24Checksum($data) . "\n",
             self::PUBLIC_KEY_BLOCK_END,
