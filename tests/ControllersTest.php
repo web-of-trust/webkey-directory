@@ -16,7 +16,6 @@ use Psr\Http\Message\{
     ServerRequestInterface,
 };
 
-
 class ControllersTest extends TestCase
 {
     private $app;
@@ -103,7 +102,7 @@ class ControllersTest extends TestCase
         );
 
         $request = $this->createRequest('GET', '/pks')->withQueryParams([
-            'search' => 'info@webkey.net.vn',
+            'search' => 'user-01@example.com',
         ]);
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
@@ -120,7 +119,7 @@ class ControllersTest extends TestCase
         $controller = $this->runner->getContainer()->get(VksController::class);
 
         $this->app->get('/vks/by-fingerprint/{fingerprint}', $controller);
-        $request = $this->createRequest('GET', '/vks/by-fingerprint/6ffad46f1a77b1c37d3b4afc5e088b143fda2105');
+        $request = $this->createRequest('GET', '/vks/by-fingerprint/3d8b4357fd879a68b17cd63e515fd6d483835295');
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
@@ -131,7 +130,7 @@ class ControllersTest extends TestCase
 
         $this->app = $this->getAppInstance();
         $this->app->get('/vks/by-keyid/{keyid}', $controller);
-        $request = $this->createRequest('GET', '/vks/by-keyid/5a28d96a75cb054f');
+        $request = $this->createRequest('GET', '/vks/by-keyid/0c78729346288572');
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
@@ -142,7 +141,7 @@ class ControllersTest extends TestCase
 
         $this->app = $this->getAppInstance();
         $this->app->get('/vks/by-email/{email}', $controller);
-        $request = $this->createRequest('GET', '/vks/by-email/info%40webkey.net.vn');
+        $request = $this->createRequest('GET', '/vks/by-email/user-01%40example.com');
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
@@ -157,7 +156,7 @@ class ControllersTest extends TestCase
         $controller = $this->runner->getContainer()->get(WkdController::class);
 
         $this->app->get('/wkd/{domain}/hu/{hash}', $controller);
-        $request = $this->createRequest('GET', '/wkd/webkey.net.vn/hu/lg6qup7uhmzijgzrtzsf2r4y3cs5d2ej');
+        $request = $this->createRequest('GET', '/wkd/example.com/hu/xcmq6doy4p6yx4oxlms2giblpmekojtu');
         $response = $this->app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();

@@ -40,6 +40,14 @@ class SyncKeyCommand extends Command
     const REQUEST_METHOD  = 'GET';
     const WKS_URL_OPTION  = 'wks-url';
 
+    const SPLIT_PATTERN      = '/^-----[^-]+-----$/';
+    const EMPTY_LINE_PATTERN = '/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/';
+    const LINE_SPLIT_PATTERN = '/\r\n|\n|\r/';
+    const HEADER_PATTERN     = '/^([^\s:]|[^\s:][^:]*[^\s:]): .+$/';
+
+    const PUBLIC_KEY_BLOCK_BEGIN = "-----BEGIN PGP PUBLIC KEY BLOCK-----\n";
+    const PUBLIC_KEY_BLOCK_END   = "-----END PGP PUBLIC KEY BLOCK-----\n";
+
     private ?string $wksUrl;
 
     /**
@@ -52,6 +60,14 @@ class SyncKeyCommand extends Command
     )
     {
         parent::__construct();
+    }
+
+    public static function extractEmail(string $userId): string
+    {
+        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
+            return $matches[0];
+        };
+        return '';
     }
 
     /**
@@ -144,18 +160,18 @@ class SyncKeyCommand extends Command
             );
             foreach ($certs as $cert) {
                 if (empty($wkdDomains[$cert->domain][$cert->wkd_hash])) {
-                    $wkdDomains[$cert->domain][$cert->wkd_hash] = $cert->key_data;
+                    $wkdDomains[$cert->domain][$cert->wkd_hash] = self::decodeArmored($cert->key_data);
                 }
                 else {
-                    $wkdDomains[$cert->domain][$cert->wkd_hash] .= $cert->key_data;
+                    $wkdDomains[$cert->domain][$cert->wkd_hash] .= self::decodeArmored($cert->key_data);
                 }
 
                 if ($email = self::extractEmail($cert->primary_user)) {
                     if (empty($vksEmails[$email])) {
-                        $vksEmails[$email] = $cert->key_data;
+                        $vksEmails[$email] = self::decodeArmored($cert->key_data);
                     }
                     else {
-                        $vksEmails[$email] .= $cert->key_data;
+                        $vksEmails[$email] .= self::decodeArmored($cert->key_data);
                     }
                 }
 
@@ -178,7 +194,7 @@ class SyncKeyCommand extends Command
                 foreach ($vksEmails as $email => $keyData) {
                     $vksFs->write(
                         $email,
-                        $keyData
+                        self::encodeArmor($keyData)
                     );
                 }
             }
@@ -197,7 +213,7 @@ class SyncKeyCommand extends Command
                                 DIRECTORY_SEPARATOR,
                                 $hash,
                             ]),
-                            $keyData
+                            self::encodeArmor($keyData)
                         );
                     }
                 }
@@ -219,11 +235,79 @@ class SyncKeyCommand extends Command
         return $httpClient->sendRequest($httpRequest);
     }
 
-    public static function extractEmail(string $userId): string
+    private static function encodeArmor(string $data): string
     {
-        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
-            return $matches[0];
-        };
-        return '';
+        return implode([
+            self::PUBLIC_KEY_BLOCK_BEGIN,
+            chunk_split(base64_encode($data), 76, "\n"),
+            '=' . self::crc24Checksum($data) . "\n",
+            self::PUBLIC_KEY_BLOCK_END,
+        ]);
+    }
+
+    private static function decodeArmored(string $armored): string
+    {
+        $textDone = false;
+        $checksum = '';
+        $type = null;
+        $dataLines = [];
+
+        $lines = preg_split(self::LINE_SPLIT_PATTERN, $armored);
+        if (!empty($lines)) {
+            foreach ($lines as $line) {
+                if ($type === null && preg_match(self::SPLIT_PATTERN, $line)) {
+                    $type = $line;
+                }
+                else {
+                    if (preg_match(self::HEADER_PATTERN, $line)) {
+                        continue;
+                    }
+                    elseif (!$textDone && preg_match('/SIGNED MESSAGE/', $type)) {
+                        if (!preg_match(self::SPLIT_PATTERN, $line)) {
+                            continue;
+                        }
+                        else {
+                            $textDone = true;
+                        }
+                    }
+                    elseif (!preg_match(self::SPLIT_PATTERN, $line)) {
+                        if (preg_match(self::EMPTY_LINE_PATTERN, $line)) {
+                            continue;
+                        }
+                        if (strpos($line, '=') === 0) {
+                            $checksum = substr($line, 1);
+                        }
+                        else {
+                            $dataLines[] = $line;
+                        }
+                    }
+                }
+            }
+        }
+
+        $data = base64_decode(implode($dataLines));
+        if (!empty($checksum) && ($checksum != self::crc24Checksum($data))) {
+            throw new \UnexpectedValueException(
+                'Ascii armor integrity check failed'
+            );
+        }
+        return preg_match('/PUBLIC KEY BLOCK/', $type) ? $data : '';
+    }
+
+    private static function crc24Checksum(string $data): string
+    {
+        $crc = 0xb704ce;
+        for ($i = 0, $len = strlen($data); $i < $len; $i++) {
+            $crc ^= (ord($data[$i]) & 255) << 16;
+            for ($j = 0; $j < 8; $j++) {
+                $crc <<= 1;
+                if ($crc & 0x1000000) {
+                    $crc ^= 0x1864cfb;
+                }
+            }
+        }
+        return base64_encode(
+            substr(pack('N', $crc & 0xffffff), 1)
+        );
     }
 }
