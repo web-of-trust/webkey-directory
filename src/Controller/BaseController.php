@@ -76,11 +76,12 @@ abstract class BaseController
         string $content
     ): ResponseInterface
     {
+        $ext = $this->container->get('key.extension');
         $response->getBody()->write($content);
         return $response->withHeader(
             'Content-Type', 'application/pgp-keys'
         )->withHeader(
-            'Content-Disposition', "attachment; filename=$filename"
+            'Content-Disposition', "attachment; filename=$filename$ext"
         )->withHeader(
             'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0'
         )->withHeader(

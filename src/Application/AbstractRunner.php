@@ -77,6 +77,7 @@ abstract class AbstractRunner implements RunnerInterface
             'error.display.details' => \DI\env('ERROR_DISPLAY_DETAILS', false),
             'error.log'             => \DI\env('ERROR_LOG', true),
             'error.log.details'     => \DI\env('ERROR_LOG_DETAILS', true),
+            'key.extension'         => \DI\env('KEY_EXTENSION', '.asc'),
         ];
     }
 
