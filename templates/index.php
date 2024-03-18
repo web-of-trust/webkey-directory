@@ -16,7 +16,6 @@
                     <div class="row height d-flex justify-content-center align-items-center">
                         <div class="col-md-8">
                             <div class="input-group">
-                                <i class="fa fa-search"></i>
                                 <input type="text" class="form-control" name="search" placeholder="Search by Email Address / Key ID / Fingerprint">
                                 <button class="btn btn-primary">
                                     <img src="<?php echo $basePath; ?>assets/search.svg" style="width: 1em; padding-bottom: 4px;"> Search
