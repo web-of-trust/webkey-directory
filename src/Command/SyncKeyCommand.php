@@ -151,7 +151,7 @@ class SyncKeyCommand extends Command
             $wkdDomains = [];
 
             $visibility = new PortableVisibilityConverter(
-                filePrivate: 0641,
+                filePrivate: 0611,
                 defaultForDirectories: Visibility::PUBLIC,
             );
             $fpFs = new Filesystem(
