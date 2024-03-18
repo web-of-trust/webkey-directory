@@ -8,7 +8,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Wkd\Command\SyncKeyCommand;
 
-class SynKeyCommandTest extends TestCase
+class CommandsTest extends TestCase
 {
     private $console;
 
