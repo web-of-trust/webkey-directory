@@ -9,19 +9,21 @@
 
 namespace Wkd\Command;
 
-use League\Flysystem\Filesystem;
-use League\Flysystem\Visibility;
-use League\Flysystem\Local\LocalFilesystemAdapter;
-use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use League\Flysystem\{
+    Local\LocalFilesystemAdapter,
+    Filesystem
+};
 use PsrDiscovery\Discover;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\{
+    Attribute\AsCommand,
+    Command\Command,
+    Input\InputInterface,
+    Input\InputOption,
+    Output\OutputInterface,
+    Question\Question,
+    Style\SymfonyStyle,
+};
 
 /**
  * Sync key command class
@@ -150,20 +152,14 @@ class SyncKeyCommand extends Command
             $vksEmails = [];
             $wkdDomains = [];
 
-            $visibility = new PortableVisibilityConverter(
-                filePrivate: 0611,
-                defaultForDirectories: Visibility::PUBLIC,
-            );
             $fpFs = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->container->get('vks.fingerprint.storage'),
-                    $visibility
+                    $this->container->get('vks.fingerprint.storage')
                 )
             );
             $keyFs = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->container->get('vks.keyid.storage'),
-                    $visibility
+                    $this->container->get('vks.keyid.storage')
                 )
             );
             foreach ($certs as $cert) {
@@ -196,8 +192,7 @@ class SyncKeyCommand extends Command
             if (!empty($vksEmails)) {
                 $vksFs = new Filesystem(
                     new LocalFilesystemAdapter(
-                        $this->container->get('vks.email.storage'),
-                        $visibility
+                        $this->container->get('vks.email.storage')
                     )
                 );
                 foreach ($vksEmails as $email => $keyData) {
@@ -211,8 +206,7 @@ class SyncKeyCommand extends Command
             if (!empty($wkdDomains)) {
                 $wkdFs = new Filesystem(
                     new LocalFilesystemAdapter(
-                        $this->container->get('wkd.storage'),
-                        $visibility
+                        $this->container->get('wkd.storage')
                     )
                 );
                 foreach ($wkdDomains as $domain => $wkdHashs) {
