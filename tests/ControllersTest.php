@@ -2,6 +2,13 @@
 
 namespace Wkd\Tests;
 
+use DI\Bridge\Slim\Bridge;
+use PHPUnit\Framework\TestCase;
+use Slim\App;
+use Wkd\Application\{
+    RouteDefinitions,
+    SlimRunner,
+};
 use Wkd\Controller\{
     BaseController,
     HomeController,
@@ -19,11 +26,20 @@ use Psr\Http\Message\{
 class ControllersTest extends TestCase
 {
     private $app;
+    private $container;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->container = (new SlimRunner(dirname(__DIR__)))->getContainer();
         $this->app = $this->getAppInstance();
+    }
+
+    private function getAppInstance(): App
+    {
+        $app = Bridge::create($this->container);
+        (new RouteDefinitions())($app);
+        return $app;
     }
 
     public function testBaseController()
