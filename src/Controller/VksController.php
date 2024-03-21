@@ -38,19 +38,19 @@ class VksController extends BaseController
         $storage = $location = '';
         if (!empty($args['fingerprint'])) {
             $storage = $this->getContainer()->get(
-                'vks.fingerprint.storage'
+                'vks.storage.fingerprint'
             );
             $location = strtolower($args['fingerprint']);
         }
         elseif (!empty($args['keyid'])) {
             $storage = $this->getContainer()->get(
-                'vks.keyid.storage'
+                'vks.storage.keyid'
             );
             $location = strtolower($args['keyid']);
         }
         elseif (!empty($args['email'])) {
             $storage = $this->getContainer()->get(
-                'vks.email.storage'
+                'vks.storage.email'
             );
             $location = $args['email'];
         }

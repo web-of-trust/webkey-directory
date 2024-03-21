@@ -63,7 +63,7 @@ class SearchController extends BaseController
         $storage = $location = $keyUrl = '';
         if (filter_var($search, FILTER_VALIDATE_EMAIL)) {
             $storage = $this->getContainer()->get(
-                'vks.email.storage'
+                'vks.storage.email'
             );
             $location = $search;
             $keyUrl = $routeParser->urlFor(
@@ -77,7 +77,7 @@ class SearchController extends BaseController
             $len = strlen(@hex2bin($search) ?: '');
             if ($len === 20) {
                 $storage = $this->getContainer()->get(
-                    'vks.fingerprint.storage'
+                    'vks.storage.fingerprint'
                 );
                 $location = strtolower($search);
                 $keyUrl = $routeParser->urlFor(
@@ -86,7 +86,7 @@ class SearchController extends BaseController
             }
             elseif ($len === 8) {
                 $storage = $this->getContainer()->get(
-                    'vks.keyid.storage'
+                    'vks.storage.keyid'
                 );
                 $location = strtolower($search);
                 $keyUrl = $routeParser->urlFor(

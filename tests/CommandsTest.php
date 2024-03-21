@@ -49,9 +49,9 @@ class CommandsTest extends TestCase
         );
 
         $certs = json_decode(file_get_contents($url));
-        $fpStorage = $this->container->get('vks.fingerprint.storage');
-        $keyidStorage = $this->container->get('vks.keyid.storage');
-        $emailStorage = $this->container->get('vks.email.storage');
+        $fpStorage = $this->container->get('vks.storage.fingerprint');
+        $keyidStorage = $this->container->get('vks.storage.keyid');
+        $emailStorage = $this->container->get('vks.storage.email');
         $wkdStorage = $this->container->get('wkd.storage');
         foreach ($certs as $cert) {
             $this->assertTrue(

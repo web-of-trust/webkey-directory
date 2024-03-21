@@ -154,12 +154,12 @@ class SyncKeyCommand extends Command
 
             $fpFs = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->container->get('vks.fingerprint.storage')
+                    $this->container->get('vks.storage.fingerprint')
                 )
             );
             $keyFs = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->container->get('vks.keyid.storage')
+                    $this->container->get('vks.storage.keyid')
                 )
             );
             foreach ($certs as $cert) {
@@ -192,7 +192,7 @@ class SyncKeyCommand extends Command
             if (!empty($vksEmails)) {
                 $vksFs = new Filesystem(
                     new LocalFilesystemAdapter(
-                        $this->container->get('vks.email.storage')
+                        $this->container->get('vks.storage.email')
                     )
                 );
                 foreach ($vksEmails as $email => $keyData) {

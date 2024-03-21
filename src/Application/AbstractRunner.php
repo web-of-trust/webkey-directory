@@ -79,43 +79,15 @@ abstract class AbstractRunner implements RunnerInterface
 
     private static function pathConfig(string $baseDir): array
     {
-        $storagePath = implode([
-            $baseDir,
-            DIRECTORY_SEPARATOR,
-            'storage',
-        ]);
-        $vksStorage = implode([
-            $storagePath,
-            DIRECTORY_SEPARATOR,
-            'vks',
-        ]);
         return [
-            'path.storage' => $storagePath,
-            'path.templates' => implode([
-                $baseDir,
-                DIRECTORY_SEPARATOR,
-                'templates',
-            ]),
-            'wkd.storage' => implode([
-                $storagePath,
-                DIRECTORY_SEPARATOR,
-                'wkd',
-            ]),
-            'vks.fingerprint.storage' => implode([
-                $vksStorage,
-                DIRECTORY_SEPARATOR,
-                'fingerprint',
-            ]),
-            'vks.keyid.storage' => implode([
-                $vksStorage,
-                DIRECTORY_SEPARATOR,
-                'keyid',
-            ]),
-            'vks.email.storage' => implode([
-                $vksStorage,
-                DIRECTORY_SEPARATOR,
-                'email',
-            ]),
+            'path.base' => $baseDir,
+            'path.storage' => \DI\string('{path.base}/storage'),
+            'path.templates' => \DI\string('{path.base}/templates'),
+            'wkd.storage' => \DI\string('{path.storage}/wkd'),
+            'vks.storage' => \DI\string('{path.storage}/vks'),
+            'vks.storage.fingerprint' => \DI\string('{vks.storage}/fingerprint'),
+            'vks.storage.keyid' => \DI\string('{vks.storage}/keyid'),
+            'vks.storage.email' => \DI\string('{vks.storage}/email'),
         ];
     }
 }
