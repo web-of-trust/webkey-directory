@@ -42,7 +42,7 @@ class HkpController extends BaseController
 
         $storage = $location = '';
         if (filter_var($search, FILTER_VALIDATE_EMAIL)) {
-            $storage = $this->getContainer()->get('vks.storage.email');
+            $storage = $this->container->get('vks.storage.email');
             $location = $search;
         }
         else {
@@ -51,13 +51,13 @@ class HkpController extends BaseController
             }
             $len = strlen(@hex2bin($search) ?: '');
             if ($len === 20) {
-                $storage = $this->getContainer()->get(
+                $storage = $this->container->get(
                     'vks.storage.fingerprint'
                 );
                 $location = strtolower($search);
             }
             elseif ($len === 8) {
-                $storage = $this->getContainer()->get(
+                $storage = $this->container->get(
                     'vks.storage.keyid'
                 );
                 $location = strtolower($search);

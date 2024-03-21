@@ -36,7 +36,7 @@ use Symfony\Component\Console\{
     name: 'webkey:sync',
     description: 'Sync OpenPGP public keys from webkey service.'
 )]
-class SyncKeyCommand extends Command
+final class SyncKeyCommand extends Command
 {
     const EMAIL_PATTERN   = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
     const CONTENT_TYPE    = 'application/json; charset=utf-8';

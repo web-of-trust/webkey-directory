@@ -41,7 +41,7 @@ class WkdController extends BaseController
         if (!empty($domain) && !empty($hash)) {
             $filesystem = new Filesystem(
                 new LocalFilesystemAdapter(
-                    $this->getContainer()->get('wkd.storage')
+                    $this->container->get('wkd.storage')
                 )
             );
             $location = implode([

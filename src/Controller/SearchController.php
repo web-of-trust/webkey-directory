@@ -53,7 +53,7 @@ class SearchController extends BaseController
         array $args
     ): ResponseInterface
     {
-        $app = $this->getContainer()->get(App::class);
+        $app = $this->container->get(App::class);
         $routeParser = $app->getRouteCollector()->getRouteParser();
 
         $params = $request->getQueryParams();
@@ -62,7 +62,7 @@ class SearchController extends BaseController
         $keyFound = false;
         $storage = $location = $keyUrl = '';
         if (filter_var($search, FILTER_VALIDATE_EMAIL)) {
-            $storage = $this->getContainer()->get(
+            $storage = $this->container->get(
                 'vks.storage.email'
             );
             $location = $search;
@@ -76,7 +76,7 @@ class SearchController extends BaseController
             }
             $len = strlen(@hex2bin($search) ?: '');
             if ($len === 20) {
-                $storage = $this->getContainer()->get(
+                $storage = $this->container->get(
                     'vks.storage.fingerprint'
                 );
                 $location = strtolower($search);
@@ -85,7 +85,7 @@ class SearchController extends BaseController
                 );
             }
             elseif ($len === 8) {
-                $storage = $this->getContainer()->get(
+                $storage = $this->container->get(
                     'vks.storage.keyid'
                 );
                 $location = strtolower($search);
@@ -102,7 +102,7 @@ class SearchController extends BaseController
         }
 
         return $this->render($response, 'search.php', [
-            'title' => $this->getContainer()->get('app.name'),
+            'title' => $this->container->get('app.name'),
             'basePath' => $app->getBasePath(),
             'search' => $search,
             'homeUrl' => $routeParser->urlFor('home'),

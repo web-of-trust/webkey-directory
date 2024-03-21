@@ -51,10 +51,10 @@ class HomeController extends BaseController
         array $args
     ): ResponseInterface
     {
-        $app = $this->getContainer()->get(App::class);
+        $app = $this->container->get(App::class);
         $routeParser = $app->getRouteCollector()->getRouteParser();
         return $this->render($response, 'index.php', [
-            'title' => $this->getContainer()->get('app.name'),
+            'title' => $this->container->get('app.name'),
             'basePath' => $app->getBasePath(),
             'homeUrl' => $routeParser->urlFor('home'),
             'searchUrl' => $routeParser->urlFor('search'),
