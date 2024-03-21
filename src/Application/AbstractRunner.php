@@ -44,7 +44,7 @@ abstract class AbstractRunner implements RunnerInterface
             ...self::appConfig(),
             ...self::pathConfig($baseDir),
         ]);
-        (new ServiceDefinitions())($builder);
+        $this->serviceDefinitions($builder);
         $this->container = $builder->build();
     }
 
@@ -55,6 +55,14 @@ abstract class AbstractRunner implements RunnerInterface
     {
         return $this->container;
     }
+
+    /**
+     * Service definitions.
+     *
+     * @param ContainerBuilder $builder.
+     * @see https://php-di.org/doc/php-definitions.html
+     */
+    abstract protected function serviceDefinitions(ContainerBuilder $builder): void;
 
     private static function appConfig(): array
     {
