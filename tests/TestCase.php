@@ -10,13 +10,12 @@ use Wkd\Application\SlimRunner;
 
 class TestCase extends PHPUnitTestCase
 {
-
-    protected $runner;
+    protected $container;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->runner = new SlimRunner(dirname(__DIR__));
+        $this->container = (new SlimRunner(dirname(__DIR__)))->getContainer();
     }
 
     /**
@@ -24,7 +23,7 @@ class TestCase extends PHPUnitTestCase
      */
     protected function getAppInstance(): App
     {
-        $app = Bridge::create($this->runner->getContainer());
+        $app = Bridge::create($this->container);
         $app->addRoutingMiddleware();
         (new RouteDefinitions())($app);
         return $app;

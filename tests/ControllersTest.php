@@ -28,7 +28,7 @@ class ControllersTest extends TestCase
 
     public function testBaseController()
     {
-        $controller = new class($this->runner->getContainer()) extends BaseController {
+        $controller = new class($this->container) extends BaseController {
             protected function action(
                 ServerRequestInterface $request,
                 ResponseInterface $response,
@@ -52,7 +52,7 @@ class ControllersTest extends TestCase
 
     public function testHomeController()
     {
-        $controller = $this->runner->getContainer()->get(HomeController::class);
+        $controller = $this->container->get(HomeController::class);
         $this->app->get('/home', $controller);
         $request = $this->createRequest('GET', '/home');
 
@@ -61,14 +61,14 @@ class ControllersTest extends TestCase
 
         $payload = (string) $response->getBody();
         $this->assertStringContainsString(
-            $this->runner->getContainer()->get('app.name'),
+            $this->container->get('app.name'),
             $payload
         );
     }
 
     public function testSearchController()
     {
-        $controller = $this->runner->getContainer()->get(SearchController::class);
+        $controller = $this->container->get(SearchController::class);
         $this->app->get('/test-search', $controller);
         $request = $this->createRequest('GET', '/test-search');
 
@@ -77,7 +77,7 @@ class ControllersTest extends TestCase
 
         $payload = (string) $response->getBody();
         $this->assertStringContainsString(
-            $this->runner->getContainer()->get('app.name'),
+            $this->container->get('app.name'),
             $payload
         );
         $this->assertStringContainsString(
@@ -88,7 +88,7 @@ class ControllersTest extends TestCase
 
     public function testHkpController()
     {
-        $controller = $this->runner->getContainer()->get(HkpController::class);
+        $controller = $this->container->get(HkpController::class);
         $this->app->get('/pks', $controller);
 
         $request = $this->createRequest('GET', '/pks');
@@ -116,7 +116,7 @@ class ControllersTest extends TestCase
 
     public function testVksController()
     {
-        $controller = $this->runner->getContainer()->get(VksController::class);
+        $controller = $this->container->get(VksController::class);
 
         $this->app->get('/vks/by-fingerprint/{fingerprint}', $controller);
         $request = $this->createRequest('GET', '/vks/by-fingerprint/3d8b4357fd879a68b17cd63e515fd6d483835295');
@@ -153,7 +153,7 @@ class ControllersTest extends TestCase
 
     public function testWkdController()
     {
-        $controller = $this->runner->getContainer()->get(WkdController::class);
+        $controller = $this->container->get(WkdController::class);
 
         $this->app->get('/wkd/{domain}/hu/{hash}', $controller);
         $request = $this->createRequest('GET', '/wkd/example.com/hu/xcmq6doy4p6yx4oxlms2giblpmekojtu');

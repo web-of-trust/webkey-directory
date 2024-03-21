@@ -4,18 +4,20 @@ namespace Wkd\Tests;
 
 use donatj\MockWebServer\MockWebServer;
 use donatj\MockWebServer\Response;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Wkd\Application\ConsoleRunner;
 use Wkd\Command\SyncKeyCommand;
 
 class CommandsTest extends TestCase
 {
-    private $console;
+    private $container;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->console = $this->runner->getContainer()->get(Application::class);
+        $this->container = (new ConsoleRunner(dirname(__DIR__)))->getContainer();
     }
 
     public function testSynKey()
@@ -35,7 +37,8 @@ class CommandsTest extends TestCase
             )
         );
 
-        $command = $this->console->find('webkey:sync');
+        $console = $this->container->get(Application::class);
+        $command = $console->find('webkey:sync');
         $tester = new CommandTester($command);
         $tester->execute([
             '--wks-url' => $url,
@@ -46,10 +49,10 @@ class CommandsTest extends TestCase
         );
 
         $certs = json_decode(file_get_contents($url));
-        $fpStorage = $this->runner->getContainer()->get('vks.fingerprint.storage');
-        $keyidStorage = $this->runner->getContainer()->get('vks.keyid.storage');
-        $emailStorage = $this->runner->getContainer()->get('vks.email.storage');
-        $wkdStorage = $this->runner->getContainer()->get('wkd.storage');
+        $fpStorage = $this->container->get('vks.fingerprint.storage');
+        $keyidStorage = $this->container->get('vks.keyid.storage');
+        $emailStorage = $this->container->get('vks.email.storage');
+        $wkdStorage = $this->container->get('wkd.storage');
         foreach ($certs as $cert) {
             $this->assertTrue(
                 file_exists(implode([
