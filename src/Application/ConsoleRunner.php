@@ -32,7 +32,6 @@ final class ConsoleRunner extends AbstractRunner
         exit(
             $this->container->get(Application::class)->run()
         );
-
     }
 
     /**
