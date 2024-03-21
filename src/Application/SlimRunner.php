@@ -12,7 +12,6 @@ namespace Wkd\Application;
 use DI\Bridge\Slim\Bridge;
 use PsrDiscovery\Discover;
 use Psr\Log\LoggerInterface;
-use Slim\App;
 use Slim\Factory\AppFactory;
 
 /**
@@ -33,43 +32,16 @@ final class SlimRunner extends AbstractRunner
         AppFactory::setResponseFactory(Discover::httpResponseFactory());
         AppFactory::setStreamFactory(Discover::httpStreamFactory());
 
-        $app = Bridge::create($this->getContainer());
-        $app->setBasePath(
-            $this->getContainer()->get('app.path') ?? self::APP_PATH
+        $app = Bridge::create($this->container);
+        $app->setBasePath($this->container->get('app.path'));
+        $app->addErrorMiddleware(
+            displayErrorDetails: (bool) $this->container->get('error.display.details'),
+            logErrors: (bool) $this->container->get('error.log'),
+            logErrorDetails: (bool) $this->container->get('error.log.details'),
+            logger: $this->container->get(LoggerInterface::class),
         );
-        self::registerMiddlewares($app);
-        self::registerRoutes($app);
+        (new RouteDefinitions())($app);
 
         $app->run();
-    }
-
-    /**
-     * Register middlewares
-     * 
-     * @param App $app
-     * @return void
-     */
-    private static function registerMiddlewares(App $app): void
-    {
-        $container = $app->getContainer();
-        $app->addRoutingMiddleware();
-        $app->addBodyParsingMiddleware();
-        $app->addErrorMiddleware(
-            displayErrorDetails: (bool) $container->get('error.display.details'),
-            logErrors: (bool) $container->get('error.log'),
-            logErrorDetails: (bool) $container->get('error.log.details'),
-            logger: $container->get(LoggerInterface::class),
-        );
-    }
-
-    /**
-     * Register routes
-     * 
-     * @param App $app
-     * @return void
-     */
-    private static function registerRoutes(App $app): void
-    {
-        (new RouteDefinitions())($app);
     }
 }

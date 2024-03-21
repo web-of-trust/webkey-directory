@@ -30,7 +30,7 @@ abstract class AbstractRunner implements RunnerInterface
      *
      * @var ContainerInterface
      */
-    private readonly ContainerInterface $container;
+    protected readonly ContainerInterface $container;
 
     /**
      * Constructor
@@ -38,14 +38,13 @@ abstract class AbstractRunner implements RunnerInterface
      * @param string $baseDir
      * @return self
      */
-    public function __construct(private readonly string $baseDir) {
+    public function __construct(string $baseDir) {
         $builder = new ContainerBuilder();
         $builder->addDefinitions([
             ...self::appConfig(),
             ...self::pathConfig($baseDir),
         ]);
-
-        self::loadServices($builder);
+        (new ServiceDefinitions())($builder);
         $this->container = $builder->build();
     }
 
@@ -55,17 +54,6 @@ abstract class AbstractRunner implements RunnerInterface
     public function getContainer(): ContainerInterface
     {
         return $this->container;
-    }
-
-    /**
-     * Load services
-     * 
-     * @param ContainerBuilder $builder
-     * @return void
-     */
-    private static function loadServices(ContainerBuilder $builder): void
-    {
-        (new ServiceDefinitions())($builder);
     }
 
     private static function appConfig(): array

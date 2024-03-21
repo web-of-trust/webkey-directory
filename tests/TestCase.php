@@ -24,7 +24,6 @@ class TestCase extends PHPUnitTestCase
     protected function getAppInstance(): App
     {
         $app = Bridge::create($this->container);
-        $app->addRoutingMiddleware();
         (new RouteDefinitions())($app);
         return $app;
     }
