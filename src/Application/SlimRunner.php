@@ -39,6 +39,7 @@ final class SlimRunner extends AbstractRunner
 
         $app = Bridge::create($this->container);
         $app->setBasePath($this->container->get('app.path'));
+        $app->addRoutingMiddleware();
         $app->addErrorMiddleware(
             displayErrorDetails: (bool) $this->container->get('error.display.details'),
             logErrors: (bool) $this->container->get('error.log'),

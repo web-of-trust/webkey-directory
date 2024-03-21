@@ -36,16 +36,6 @@ abstract class BaseController
     }
 
     /**
-     * Get psr container
-     *
-     * @return ContainerInterface
-     */
-    public function getContainer(): ContainerInterface
-    {
-        return $this->container;
-    }
-
-    /**
      * Perform action on controller by calling `self::action`.
      * 
      * @param ServerRequestInterface $request
