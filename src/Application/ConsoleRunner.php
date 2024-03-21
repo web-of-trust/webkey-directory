@@ -27,7 +27,7 @@ final class ConsoleRunner extends AbstractRunner
     public function run(): void
     {
         exit(
-            $this->getContainer()->get(Application::class)->run()
+            $this->container->get(Application::class)->run()
         );
     }
 }
