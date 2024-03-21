@@ -5,6 +5,7 @@ namespace Wkd\Tests;
 use DI\Bridge\Slim\Bridge;
 use PHPUnit\Framework\TestCase;
 use Slim\App;
+use Slim\Factory\AppFactory;
 use Wkd\Application\{
     RouteDefinitions,
     SlimRunner,
@@ -25,14 +26,14 @@ use Psr\Http\Message\{
 
 class ControllersTest extends TestCase
 {
-    private $app;
     private $container;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->container = (new SlimRunner(dirname(__DIR__)))->getContainer();
-        $this->app = $this->getAppInstance();
+        AppFactory::setResponseFactory(Discover::httpResponseFactory());
+        AppFactory::setStreamFactory(Discover::httpStreamFactory());
     }
 
     private function getAppInstance(): App
@@ -44,6 +45,7 @@ class ControllersTest extends TestCase
 
     public function testBaseController()
     {
+        $app = $this->getAppInstance();
         $controller = new class($this->container) extends BaseController {
             protected function action(
                 ServerRequestInterface $request,
@@ -56,10 +58,10 @@ class ControllersTest extends TestCase
             }
         };
 
-        $this->app->get('/test', $controller);
+        $app->get('/test', $controller);
         $request = $this->createRequest('GET', '/test');
 
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
 
         $payload = (string) $response->getBody();
@@ -68,11 +70,13 @@ class ControllersTest extends TestCase
 
     public function testHomeController()
     {
+        $app = $this->getAppInstance();
         $controller = $this->container->get(HomeController::class);
-        $this->app->get('/home', $controller);
+
+        $app->get('/home', $controller);
         $request = $this->createRequest('GET', '/home');
 
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
 
         $payload = (string) $response->getBody();
@@ -84,11 +88,13 @@ class ControllersTest extends TestCase
 
     public function testSearchController()
     {
+        $app = $this->getAppInstance();
         $controller = $this->container->get(SearchController::class);
-        $this->app->get('/test-search', $controller);
+
+        $app->get('/test-search', $controller);
         $request = $this->createRequest('GET', '/test-search');
 
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
 
         $payload = (string) $response->getBody();
@@ -104,11 +110,12 @@ class ControllersTest extends TestCase
 
     public function testHkpController()
     {
+        $app = $this->getAppInstance();
         $controller = $this->container->get(HkpController::class);
-        $this->app->get('/pks', $controller);
 
+        $app->get('/pks', $controller);
         $request = $this->createRequest('GET', '/pks');
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(404, $response->getStatusCode());
 
         $payload = (string) $response->getBody();
@@ -120,7 +127,7 @@ class ControllersTest extends TestCase
         $request = $this->createRequest('GET', '/pks')->withQueryParams([
             'search' => 'user-01@example.com',
         ]);
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
 
         $payload = (string) $response->getBody();
@@ -132,11 +139,12 @@ class ControllersTest extends TestCase
 
     public function testVksController()
     {
+        $app = $this->getAppInstance();
         $controller = $this->container->get(VksController::class);
 
-        $this->app->get('/vks/by-fingerprint/{fingerprint}', $controller);
+        $app->get('/vks/by-fingerprint/{fingerprint}', $controller);
         $request = $this->createRequest('GET', '/vks/by-fingerprint/3d8b4357fd879a68b17cd63e515fd6d483835295');
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
         $this->assertStringContainsString(
@@ -144,10 +152,10 @@ class ControllersTest extends TestCase
             $payload
         );
 
-        $this->app = $this->getAppInstance();
-        $this->app->get('/vks/by-keyid/{keyid}', $controller);
+        $app = $this->getAppInstance();
+        $app->get('/vks/by-keyid/{keyid}', $controller);
         $request = $this->createRequest('GET', '/vks/by-keyid/0c78729346288572');
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
         $this->assertStringContainsString(
@@ -155,10 +163,10 @@ class ControllersTest extends TestCase
             $payload
         );
 
-        $this->app = $this->getAppInstance();
-        $this->app->get('/vks/by-email/{email}', $controller);
+        $app = $this->getAppInstance();
+        $app->get('/vks/by-email/{email}', $controller);
         $request = $this->createRequest('GET', '/vks/by-email/user-01%40example.com');
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
         $this->assertStringContainsString(
@@ -169,11 +177,12 @@ class ControllersTest extends TestCase
 
     public function testWkdController()
     {
+        $app = $this->getAppInstance();
         $controller = $this->container->get(WkdController::class);
 
-        $this->app->get('/wkd/{domain}/hu/{hash}', $controller);
+        $app->get('/wkd/{domain}/hu/{hash}', $controller);
         $request = $this->createRequest('GET', '/wkd/example.com/hu/xcmq6doy4p6yx4oxlms2giblpmekojtu');
-        $response = $this->app->handle($request);
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
         $this->assertStringContainsString(
