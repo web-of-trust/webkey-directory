@@ -143,7 +143,7 @@ class ControllersTest extends TestCase
         $controller = $this->container->get(VksController::class);
 
         $app->get('/vks/by-fingerprint/{fingerprint}', $controller);
-        $request = $this->createRequest('GET', '/vks/by-fingerprint/3d8b4357fd879a68b17cd63e515fd6d483835295');
+        $request = $this->createRequest('GET', '/vks/by-fingerprint/06b44bb3bff5b36b76b55329564c2faa27e9c738');
         $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
@@ -154,7 +154,7 @@ class ControllersTest extends TestCase
 
         $app = $this->getAppInstance();
         $app->get('/vks/by-keyid/{keyid}', $controller);
-        $request = $this->createRequest('GET', '/vks/by-keyid/0c78729346288572');
+        $request = $this->createRequest('GET', '/vks/by-keyid/2c3277879b6c1c30');
         $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();
@@ -181,7 +181,7 @@ class ControllersTest extends TestCase
         $controller = $this->container->get(WkdController::class);
 
         $app->get('/wkd/{domain}/hu/{hash}', $controller);
-        $request = $this->createRequest('GET', '/wkd/example.com/hu/xcmq6doy4p6yx4oxlms2giblpmekojtu');
+        $request = $this->createRequest('GET', '/wkd/example.com/hu/lg6qup7uhmzijgzrtzsf2r4y3cs5d2ej');
         $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $payload = (string) $response->getBody();

@@ -144,7 +144,7 @@ server {
 For other Web Servers see [Slim 4 Documentation](https://www.slimframework.com/docs/v4/start/web-servers.html)
 
 ## OpenPGP Keys Synchronization
-Webkey Directory allow to synchronize OpenPGP Keys from webkey service which provided by (Webkey Privacy)[https://github.com/web-of-trust/webkey-privacy]
+Webkey Directory allow to synchronize OpenPGP Keys from webkey directory service which provided by (Webkey Privacy)[https://github.com/web-of-trust/webkey-privacy]
 
 This function using [PSR-17: HTTP Factories](https://www.php-fig.org/psr/psr-17/), [PSR-18: HTTP Client](https://www.php-fig.org/psr/psr-18/) for requesting to webkey service.
 Make sure to install package(s) providing ["http client implementation"](https://packagist.org/providers/psr/http-client-implementation) & ["http factory implementation"](https://packagist.org/providers/psr/http-factory-implementation).
@@ -158,7 +158,7 @@ Run `bin/console webkey:sync` command with parameter `--wks-url` to synchronize 
 
 Example: To synchronize keys which is host at https://wkp.example.org
 ```bash
-bin/console webkey:sync --wks-url=https://wkp.example.org/api/v1/certificate
+bin/console webkey:sync --wks-url=https://wkp.example.org/api/openpgp/directory
 ```
 
 ## Licensing
