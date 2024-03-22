@@ -15,6 +15,7 @@ use League\Flysystem\{
 };
 use PsrDiscovery\Discover;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\{
     Attribute\AsCommand,
     Command\Command,
@@ -196,7 +197,7 @@ final class SyncKeyCommand extends Command
         }
     }
 
-    private function sendRequest()
+    private function sendRequest(): ResponseInterface
     {
         $httpClient = Discover::httpClient();
         $requestFactory = Discover::httpRequestFactory();
