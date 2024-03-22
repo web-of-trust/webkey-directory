@@ -10,7 +10,7 @@
 namespace Wkd\Application;
 
 use DI\ContainerBuilder;
-use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface as Container;
 use Symfony\Component\Console\Application;
 use Wkd\Command\SyncKeyCommand;
 
@@ -40,13 +40,14 @@ final class ConsoleRunner extends AbstractRunner
     protected function serviceDefinitions(ContainerBuilder $builder): void
     {
         $builder->addDefinitions([
-            Application::class => function (ContainerInterface $container) {
+            SyncKeyCommand::class => fn (Container $c) => new SyncKeyCommand($c),
+            Application::class => function (Container $c) {
                 $console = new Application(
-                    $container->get('app.name'),
-                    $container->get('app.version'),
+                    $c->get('app.name'),
+                    $c->get('app.version'),
                 );
                 $console->addCommands([
-                    new SyncKeyCommand($container),
+                    $c->get(SyncKeyCommand::class),
                 ]);
 
                 return $console;

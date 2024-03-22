@@ -12,7 +12,7 @@ namespace Wkd\Application;
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use PsrDiscovery\Discover;
-use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface as Container;
 use Psr\Log\LoggerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Views\PhpRenderer;
@@ -58,8 +58,8 @@ final class SlimRunner extends AbstractRunner
     {
         $builder->addDefinitions([
             LoggerInterface::class => fn () => Discover::log() ?? new Logger(),
-            PhpRenderer::class => fn (ContainerInterface $container) => new PhpRenderer(
-                $container->get('path.templates')
+            PhpRenderer::class => fn (Container $c) => new PhpRenderer(
+                $c->get('path.templates')
             ),
         ]);
     }
