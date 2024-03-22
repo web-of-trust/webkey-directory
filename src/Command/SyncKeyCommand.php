@@ -39,7 +39,6 @@ use Symfony\Component\Console\{
 )]
 final class SyncKeyCommand extends Command
 {
-    const EMAIL_PATTERN   = '/([A-Z0-9._%+-])+@[A-Z0-9.-]+\.[A-Z]{2,}/i';
     const CONTENT_TYPE    = 'application/json; charset=utf-8';
     const HTTP_USER_AGENT = 'Webkey-Directory-Client';
     const REQUEST_METHOD  = 'GET';
@@ -57,14 +56,6 @@ final class SyncKeyCommand extends Command
     )
     {
         parent::__construct();
-    }
-
-    public static function extractEmail(string $userId): string
-    {
-        if (preg_match(self::EMAIL_PATTERN, $userId, $matches)) {
-            return $matches[0];
-        };
-        return '';
     }
 
     /**

@@ -48,45 +48,63 @@ class CommandsTest extends TestCase
             'Web keys successfully synchronized!', $tester->getDisplay()
         );
 
-        // $certs = json_decode(file_get_contents($url));
-        // $fpStorage = $this->container->get('vks.storage.fingerprint');
-        // $keyidStorage = $this->container->get('vks.storage.keyid');
-        // $emailStorage = $this->container->get('vks.storage.email');
-        // $wkdStorage = $this->container->get('wkd.storage');
-        // foreach ($certs as $cert) {
-        //     $this->assertTrue(
-        //         file_exists(implode([
-        //             $fpStorage,
-        //             DIRECTORY_SEPARATOR,
-        //             strtolower($cert->fingerprint),
-        //         ]))
-        //     );
-        //     $this->assertTrue(
-        //         file_exists(implode([
-        //             $keyidStorage,
-        //             DIRECTORY_SEPARATOR,
-        //             strtolower($cert->key_id),
-        //         ]))
-        //     );
-        //     $this->assertTrue(
-        //         file_exists(implode([
-        //             $wkdStorage,
-        //             DIRECTORY_SEPARATOR,
-        //             $cert->domain,
-        //             DIRECTORY_SEPARATOR,
-        //             $cert->wkd_hash,
-        //         ]))
-        //     );
+        if ($directory = json_decode(file_get_contents($url), true)) {
+            if (!empty($byFingerprints = $directory['fingerprint'] ?? [])) {
+                $storage = $this->container->get('vks.storage.fingerprint');
+                foreach ($byFingerprints as $fingerprint => $keyData) {
+                    $this->assertTrue(
+                        file_exists(implode([
+                            $storage,
+                            DIRECTORY_SEPARATOR,
+                            strtolower($fingerprint),
+                        ]))
+                    );
+                }
+            }
 
-        //     $email = SyncKeyCommand::extractEmail($cert->primary_user);
-        //     $this->assertTrue(
-        //         file_exists(implode([
-        //             $emailStorage,
-        //             DIRECTORY_SEPARATOR,
-        //             $email,
-        //         ]))
-        //     );
-        // }
+            if (!empty($byKeyIDs = $directory['keyid'] ?? [])) {
+                $storage = $this->container->get('vks.storage.keyid');
+                foreach ($byKeyIDs as $keyID => $keyData) {
+                    $this->assertTrue(
+                        file_exists(implode([
+                            $storage,
+                            DIRECTORY_SEPARATOR,
+                            strtolower($keyID),
+                        ]))
+                    );
+                }
+            }
+
+            if (!empty($byEmails = $directory['email'] ?? [])) {
+                $storage = $this->container->get('vks.storage.email');
+                foreach ($byEmails as $email => $keyData) {
+                    $this->assertTrue(
+                        file_exists(implode([
+                            $storage,
+                            DIRECTORY_SEPARATOR,
+                            $email,
+                        ]))
+                    );
+                }
+            }
+
+            if (!empty($byDomains = $directory['domain'] ?? [])) {
+                $storage = $this->container->get('wkd.storage');
+                foreach ($byDomains as $domain => $wkdHashs) {
+                    foreach ($wkdHashs as $hash => $keyData) {
+                        $this->assertTrue(
+                            file_exists(implode([
+                                $storage,
+                                DIRECTORY_SEPARATOR,
+                                $domain,
+                                DIRECTORY_SEPARATOR,
+                                $hash,
+                            ]))
+                        );
+                    }
+                }
+            }
+        }
 
         $server->stop();
     }
