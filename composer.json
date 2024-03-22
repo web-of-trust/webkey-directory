@@ -34,12 +34,19 @@
     },
     "require-dev": {
         "donatj/mock-webserver": "^2.7",
-        "guzzlehttp/guzzle": "^7.8",
+        "nyholm/psr7": "^1.8",
+        "nyholm/psr7-server": "^1.1",
+        "php-http/curl-client": "^2.3",
         "phpunit/phpunit": "^9.0 | ^10.0"
     },
     "scripts": {
         "test": [
             "vendor/bin/phpunit"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
