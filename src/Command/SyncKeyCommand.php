@@ -199,15 +199,14 @@ final class SyncKeyCommand extends Command
 
     private function sendRequest(): ResponseInterface
     {
-        $httpClient = Discover::httpClient();
-        $requestFactory = Discover::httpRequestFactory();
-        $httpRequest = $requestFactory
-            ->createRequest(self::REQUEST_METHOD, $this->wksUrl)
-            ->withHeader('Content-Type', self::CONTENT_TYPE)
-            ->withHeader(
-                'User-Agent',
-                $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT
-            );
-        return $httpClient->sendRequest($httpRequest);
+        return Discover::httpClient()->sendRequest(
+            Discover::httpRequestFactory()
+                ->createRequest(self::REQUEST_METHOD, $this->wksUrl)
+                ->withHeader('Content-Type', self::CONTENT_TYPE)
+                ->withHeader(
+                    'User-Agent',
+                    $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT
+                )
+        );
     }
 }
