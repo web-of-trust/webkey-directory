@@ -5,7 +5,7 @@ Webkey Directory is a public service for discovery of OpenPGP-compatible keys
 ## Features
 - Support parts of [Web Key Directory](https://datatracker.ietf.org/doc/draft-koch-openpgp-webkey-service) (WKD)
 - Support parts of [HTTP Keyserver Protocol](https://datatracker.ietf.org/doc/html/draft-gallagher-openpgp-hkp) (HKP)
-- Support parts of Verifying Keyserver (VKS)
+- Support parts of [Verifying Keyserver](https://keys.openpgp.org/about/api) (VKS)
 
 ### Web Key Directory (WKD) Interface
 The Web Key Directory is a standard for discovery of OpenPGP keys by email address,
