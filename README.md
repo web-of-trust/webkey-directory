@@ -116,6 +116,9 @@ It listens for inbound HTTP connections on port 80. It assumes a PHP-FPM server 
 You should update the server_name, error_log, access_log, and root directives with your own values.
 The root directive is the path to your application’s public document root directory.
 ```nginx
+upstream php-handler {
+    server 127.0.0.1:9123;
+}
 server {
     listen 80;
     server_name wkd.example.org;
@@ -135,7 +138,7 @@ server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param SCRIPT_NAME $fastcgi_script_name;
         fastcgi_index index.php;
-        fastcgi_pass 127.0.0.1:9123;
+        fastcgi_pass php-handler;
     }
 }
 ```
