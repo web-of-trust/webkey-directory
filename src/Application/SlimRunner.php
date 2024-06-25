@@ -18,7 +18,6 @@ use Slim\Factory\AppFactory;
 use Slim\Views\PhpRenderer;
 use Slim\Logger;
 
-
 /**
  * Slim runner class
  * Run the Slim application.
